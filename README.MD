@@ -1,6 +1,6 @@
 <p align="center">
 <img width="152" height="152" src="assets/docs/IconJ.png"><br>
-<img alt="Repo Size" src="https://img.shields.io/badge/Size-402KB_or_0.42MB"> <img alt="Last Commit" src="https://img.shields.io/github/last-commit/aebkjayboo/JelloClient">
+<img alt="Repo Size" src="https://img.shields.io/badge/Size-402KB-blue"> <img alt="Last Commit" src="https://img.shields.io/github/last-commit/aebkjayboo/JelloClient">
 </p>
 
 <h1 align="center">© 2026 Sai. All rights reserved.</h1><br>
