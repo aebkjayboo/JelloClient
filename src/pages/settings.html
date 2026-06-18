@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JelloClient — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <script src="../JS/theme.js"></script>
+  <style>
+    .fflag-add-form { display: flex; gap: 8px; align-items: center; padding: 6px 0; }
+    .fflag-add-form input { flex: 1; min-width: 0; }
+    .fflag-list { display: flex; flex-direction: column; gap: 4px; padding: 6px 0 14px; }
+    .fflag-row { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 6px; background: rgba(127,127,127,0.08); }
+    .fflag-name { flex: 1; font-family: monospace; font-size: 0.85em; word-break: break-all; }
+    .fflag-value { font-family: monospace; font-size: 0.85em; opacity: 0.7; }
+    .fflag-remove { background: none; border: none; cursor: pointer; font-size: 1.1em; line-height: 1; opacity: 0.6; padding: 0 4px; color: inherit; }
+    .fflag-remove:hover { opacity: 1; }
+    .fflag-json-textarea { width: 100%; font-family: monospace; font-size: 0.85em; resize: vertical; padding: 8px; box-sizing: border-box; }
+    .fflag-import-actions { padding: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-drag"></div>
+    <div class="traffic-lights">
+      <button class="tl-btn tl-close"    id="btn-close"></button>
+      <button class="tl-btn tl-minimize" id="btn-minimize"></button>
+      <button class="tl-btn tl-maximize" id="btn-maximize"></button>
+    </div>
+    <div class="topbar-title">Settings</div>
+    <div class="topbar-actions">
+      <button class="icon-btn back-btn" id="btn-back" title="Back">←</button>
+    </div>
+  </div>
+
+  <div class="content settings-layout">
+
+    <nav class="settings-nav">
+      <button class="nav-item active" data-section="main">Main</button>
+      <button class="nav-item"        data-section="optimizations">Optimizations</button>
+      <button class="nav-item"        data-section="fflags">FFlags</button>
+      <button class="nav-item"        data-section="evasion">Evasion</button>
+      <button class="nav-item"        data-section="game-settings">Game Settings</button>
+    </nav>
+
+    <div class="settings-body">
+
+      <section class="settings-section active" id="section-main">
+        <h2 class="section-title">Main</h2>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">Server Test</span>
+            <span class="setting-desc">Ping the local server to verify connection.</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btn-test">Test</button>
+        </div>
+        <div class="status-line" id="test-result" style="text-align:left; padding: 6px 0;"></div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">Roblox Font</span>
+            <span class="setting-desc">Choose a cached .ttf font. Applied before Roblox launches.</span>
+          </div>
+          <div class="font-actions">
+            <div class="custom-select" id="font-dropdown">
+              <button class="custom-select-trigger" id="font-trigger" type="button">
+                <span class="custom-select-value" id="font-trigger-text">Default</span>
+                <span class="custom-select-arrow">⌄</span>
+              </button>
+              <div class="custom-select-menu" id="font-menu"></div>
+            </div>
+            <input type="hidden" id="font-select" value="default">
+
+            <button class="btn btn-ghost btn-sm file-btn" id="btn-add-font">
+              <img src="../../assets/filelogo.png" alt="">
+              <span>Add font</span>
+            </button>
+          </div>
+        </div>
+        <div class="status-line" id="font-result" style="text-align:left; padding: 6px 0;"></div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">Multi Instance</span>
+            <span class="setting-desc">Run multiple Roblox clients at the same time.</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="chk-multi-instance">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">Discord Rich Presence</span>
+            <span class="setting-desc">Displays Clients RPC</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="chk-discord-rpc">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+
+      </section>
+
+      <section class="settings-section" id="section-optimizations">
+        <h2 class="section-title">Optimizations</h2>
+        <p class="empty-state">Nothing here yet.</p>
+      </section>
+
+      <section class="settings-section" id="section-fflags">
+        <h2 class="section-title">FFlags</h2>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">Add Flag</span>
+            <span class="setting-desc">Add or update a single FFlag override by name.</span>
+          </div>
+        </div>
+        <div class="fflag-add-form">
+          <input type="text" id="fflag-name-input" placeholder="FFlagHandleAltEnterFullscreenManually">
+          <input type="text" id="fflag-value-input" placeholder="False">
+          <button class="btn btn-ghost btn-sm" id="btn-add-fflag">Add</button>
+        </div>
+        <div class="status-line" id="fflag-add-result" style="text-align:left; padding: 6px 0;"></div>
+
+        <div class="fflag-list" id="fflag-list"></div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-name">Import JSON</span>
+            <span class="setting-desc">Paste a ClientAppSettings.json-style object to bulk-import flags.</span>
+          </div>
+        </div>
+        <textarea id="fflag-json-input" class="fflag-json-textarea" rows="6" placeholder='{ "FFlagHandleAltEnterFullscreenManually": "False" }'></textarea>
+        <div class="fflag-import-actions">
+          <button class="btn btn-ghost btn-sm" id="btn-import-fflags">Import</button>
+        </div>
+        <div class="status-line" id="fflag-import-result" style="text-align:left; padding: 6px 0;"></div>
+      </section>
+
+      <section class="settings-section" id="section-evasion">
+        <h2 class="section-title">Evasion</h2>
+        <p class="empty-state">Nothing here yet.</p>
+      </section>
+
+      <section class="settings-section" id="section-game-settings">
+        <h2 class="section-title">Game Settings</h2>
+        <p class="empty-state">Nothing here yet.</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="../JS/events.js"></script>
+  <script src="../JS/save-bar.js"></script>
+  <script>
+    // ── Nav ─────────────────────────────────────────────────────────────────
+
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'))
+        document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'))
+        btn.classList.add('active')
+        document.getElementById('section-' + btn.dataset.section).classList.add('active')
+      })
+    })
+
+    // ── Server test ──────────────────────────────────────────────────────────
+
+    document.getElementById('btn-test').addEventListener('click', async () => {
+      const result = document.getElementById('test-result')
+      result.textContent = 'Pinging…'
+      const data = await api('/settings/test')
+      result.textContent = data.message ?? data.status
+    })
+
+    // ── Roblox Font ──────────────────────────────────────────────────────────
+
+    const { ipcRenderer: settingsIpcRenderer } = require('electron')
+
+    const fontHidden = document.getElementById('font-select')
+    const fontDropdown = document.getElementById('font-dropdown')
+    const fontTrigger = document.getElementById('font-trigger')
+    const fontTriggerText = document.getElementById('font-trigger-text')
+    const fontMenu = document.getElementById('font-menu')
+    const btnAddFont = document.getElementById('btn-add-font')
+    const fontResult = document.getElementById('font-result')
+
+    let _committedFont = 'default'
+    let _fontItems = []
+
+    async function apiJson(endpoint, body = {}) {
+      const port = await settingsIpcRenderer.invoke('get-port')
+      if (!port) return { status: 'error', message: 'Server not running' }
+      const res = await fetch(`http://127.0.0.1:${port}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      return res.json()
+    }
+
+    function getFontLabel(font) {
+      return font.name + (font.custom ? '  · cached' : '')
+    }
+
+    function setFontValue(value) {
+      const selected = _fontItems.find(font => font.id === value) || _fontItems[0]
+      const nextValue = selected?.id || 'default'
+      fontHidden.value = nextValue
+      fontTriggerText.textContent = selected ? getFontLabel(selected) : 'Default'
+
+      fontMenu.querySelectorAll('.custom-select-item').forEach(item => {
+        item.classList.toggle('selected', item.dataset.value === nextValue)
+      })
+    }
+
+    function renderFonts(fonts, selected) {
+      _fontItems = Array.isArray(fonts) && fonts.length
+        ? fonts
+        : [{ id: 'default', name: 'Default', custom: false }]
+
+      fontMenu.innerHTML = ''
+
+      for (const font of _fontItems) {
+        const item = document.createElement('button')
+        item.className = 'custom-select-item'
+        item.type = 'button'
+        item.dataset.value = font.id
+        item.textContent = getFontLabel(font)
+
+        item.addEventListener('click', () => {
+          setFontValue(font.id)
+          fontDropdown.classList.remove('open')
+          watchFontChange()
+        })
+
+        fontMenu.appendChild(item)
+      }
+
+      setFontValue(selected || 'default')
+      _committedFont = fontHidden.value
+    }
+
+    async function loadFonts(preferredSelection = null) {
+      const data = await api('/settings/fonts')
+      if (data.status !== 'ok') {
+        fontResult.textContent = data.message || 'Could not load fonts.'
+        return
+      }
+
+      renderFonts(data.fonts, preferredSelection || data.selected)
+    }
+
+    function setFontControlsDisabled(disabled) {
+      fontTrigger.disabled = disabled
+      btnAddFont.disabled = disabled
+      fontDropdown.classList.toggle('disabled', disabled)
+    }
+
+    function watchFontChange() {
+      if (fontHidden.value !== _committedFont) {
+        SaveBar.watch(
+          'font',
+          async () => {
+            setFontControlsDisabled(true)
+            const data = await apiJson('/settings/fonts/apply', { font_id: fontHidden.value })
+            fontResult.textContent = data.message || data.status
+            if (data.status === 'ok') _committedFont = fontHidden.value
+            setFontControlsDisabled(false)
+          },
+          () => {
+            setFontValue(_committedFont)
+            fontResult.textContent = ''
+          }
+        )
+      } else {
+        SaveBar.unwatch('font')
+      }
+    }
+
+    fontTrigger.addEventListener('click', () => {
+      if (fontTrigger.disabled) return
+      fontDropdown.classList.toggle('open')
+    })
+
+    document.addEventListener('click', (e) => {
+      if (!fontDropdown.contains(e.target)) {
+        fontDropdown.classList.remove('open')
+      }
+    })
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        fontDropdown.classList.remove('open')
+      }
+    })
+
+    btnAddFont.addEventListener('click', async () => {
+      const path = await settingsIpcRenderer.invoke('select-font-file')
+      if (!path) return
+
+      fontResult.textContent = 'Caching font…'
+      const data = await apiJson('/settings/fonts/add', { path })
+      fontResult.textContent = data.message || data.status
+
+      if (data.status === 'ok') {
+        await loadFonts(data.font.id)
+        watchFontChange()
+      }
+    })
+
+    // ── Multi Instance ───────────────────────────────────────────────────────
+
+    const chk = document.getElementById('chk-multi-instance')
+    let _committedMultiInstance = false
+
+    async function loadMultiInstance() {
+      const data = await api('/settings/get/multi_instance')
+      _committedMultiInstance = data.value === true
+      chk.checked = _committedMultiInstance
+    }
+
+    chk.addEventListener('change', () => {
+      if (chk.checked !== _committedMultiInstance) {
+        SaveBar.watch(
+          'multi_instance',
+          async () => {
+            chk.disabled = true
+            const endpoint = chk.checked
+              ? '/settings/multi-instance/enable'
+              : '/settings/multi-instance/disable'
+            await api(endpoint, 'POST')
+            _committedMultiInstance = chk.checked
+            chk.disabled = false
+          },
+          () => {
+            chk.checked = _committedMultiInstance
+          }
+        )
+      } else {
+        SaveBar.unwatch('multi_instance')
+      }
+    })
+
+    // ── Discord RPC ──────────────────────────────────────────────────────────
+
+    const chkRpc = document.getElementById('chk-discord-rpc')
+    let _committedDiscordRpc = false
+
+    async function loadDiscordRpc() {
+      const data = await api('/settings/get/discord_rpc')
+      _committedDiscordRpc = data.value === true
+      chkRpc.checked = _committedDiscordRpc
+    }
+
+    chkRpc.addEventListener('change', () => {
+      if (chkRpc.checked !== _committedDiscordRpc) {
+        SaveBar.watch(
+          'discord_rpc',
+          async () => {
+            chkRpc.disabled = true
+            const endpoint = chkRpc.checked
+              ? '/settings/discord-rpc/enable'
+              : '/settings/discord-rpc/disable'
+            await api(endpoint, 'POST')
+            _committedDiscordRpc = chkRpc.checked
+            chkRpc.disabled = false
+          },
+          () => {
+            chkRpc.checked = _committedDiscordRpc
+          }
+        )
+      } else {
+        SaveBar.unwatch('discord_rpc')
+      }
+    })
+
+    // ── FFlags ───────────────────────────────────────────────────────────────
+
+    const fflagList = document.getElementById('fflag-list')
+    const fflagNameInput = document.getElementById('fflag-name-input')
+    const fflagValueInput = document.getElementById('fflag-value-input')
+    const btnAddFflag = document.getElementById('btn-add-fflag')
+    const fflagAddResult = document.getElementById('fflag-add-result')
+    const fflagJsonInput = document.getElementById('fflag-json-input')
+    const btnImportFflags = document.getElementById('btn-import-fflags')
+    const fflagImportResult = document.getElementById('fflag-import-result')
+
+    function renderFflags(flags) {
+      fflagList.innerHTML = ''
+
+      if (!flags.length) {
+        const empty = document.createElement('p')
+        empty.className = 'empty-state'
+        empty.textContent = 'No custom flags yet.'
+        fflagList.appendChild(empty)
+        return
+      }
+
+      for (const flag of flags) {
+        const row = document.createElement('div')
+        row.className = 'fflag-row'
+
+        const name = document.createElement('span')
+        name.className = 'fflag-name'
+        name.textContent = flag.name
+
+        const value = document.createElement('span')
+        value.className = 'fflag-value'
+        value.textContent = String(flag.value)
+
+        const remove = document.createElement('button')
+        remove.className = 'fflag-remove'
+        remove.type = 'button'
+        remove.textContent = '×'
+        remove.title = 'Remove'
+        remove.addEventListener('click', async () => {
+          await apiJson('/settings/fflags/remove', { name: flag.name })
+          await loadFflags()
+        })
+
+        row.appendChild(name)
+        row.appendChild(value)
+        row.appendChild(remove)
+        fflagList.appendChild(row)
+      }
+    }
+
+    async function loadFflags() {
+      const data = await api('/settings/fflags')
+      if (data.status !== 'ok') return
+      renderFflags(data.fflags)
+    }
+
+    btnAddFflag.addEventListener('click', async () => {
+      const name = fflagNameInput.value.trim()
+      const value = fflagValueInput.value.trim()
+
+      if (!name) {
+        fflagAddResult.textContent = 'Flag name is required.'
+        return
+      }
+
+      fflagAddResult.textContent = 'Adding…'
+      const data = await apiJson('/settings/fflags/add', { name, value })
+      fflagAddResult.textContent = data.message || data.status
+
+      if (data.status === 'ok') {
+        fflagNameInput.value = ''
+        fflagValueInput.value = ''
+        await loadFflags()
+      }
+    })
+
+    btnImportFflags.addEventListener('click', async () => {
+      const raw = fflagJsonInput.value.trim()
+
+      if (!raw) {
+        fflagImportResult.textContent = 'Paste some JSON first.'
+        return
+      }
+
+      fflagImportResult.textContent = 'Importing…'
+      const data = await apiJson('/settings/fflags/import', { json: raw })
+      fflagImportResult.textContent = data.message || data.status
+
+      if (data.status === 'ok') {
+        fflagJsonInput.value = ''
+        await loadFflags()
+      }
+    })
+
+    loadFonts()
+    loadMultiInstance()
+    loadDiscordRpc()
+    loadFflags()
+  </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+{
+  "author": "Sai",
+  "license": "MIT",
+  "name": "jelloclient",
+  "version": "1.0.0",
+  "description": "JelloClient is a Roblox bootstrapper that gives you options such as FFlags, Multi Instance, Optimizations, custom fonts, and Discord Rich Presence.",
+  "private": true,
+  "keywords": [
+    "roblox",
+    "bootstrapper",
+    "jelloclient",
+    "electron",
+    "flask",
+    "fflags",
+    "discord-rpc"
+  ],
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "build": "electron-builder",
+    "dist": "electron-builder --win nsis",
+    "release": "electron-builder --win nsis --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.sai.jelloclient",
+    "productName": "JelloClient",
+    "copyright": "Copyright © 2026 Sai",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "package.json",
+      "assets/**/*",
+      "src/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "src/PY",
+        "to": "src/PY",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "JelloClient"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "aebkjayboo",
+        "repo": "JelloClient"
+      }
+    ]
+  }
+}
