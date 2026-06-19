@@ -1,11 +1,51 @@
 const { app, BrowserWindow, ipcMain, dialog, screen } = require('electron')
 const path = require('path')
 const { spawn } = require('child_process')
+const { autoUpdater } = require('electron-updater')
 
 let win
 let watermarkWin
 let pyServer
 let serverPort = null
+
+autoUpdater.autoDownload = true
+autoUpdater.autoInstallOnAppQuit = false
+
+function killAll() {
+  if (pyServer) {
+    pyServer.kill()
+    pyServer = null
+  }
+  if (watermarkWin && !watermarkWin.isDestroyed()) {
+    watermarkWin.close()
+    watermarkWin = null
+  }
+}
+
+function checkForUpdates() {
+  if (!app.isPackaged) return
+  autoUpdater.checkForUpdates().catch(err => console.error('[Updater]', err))
+}
+
+autoUpdater.on('update-available', info => {
+  console.log('[Updater] Update available:', info.version)
+  if (win && !win.isDestroyed()) win.webContents.send('update-status', 'downloading', info.version)
+})
+
+autoUpdater.on('download-progress', progress => {
+  if (win && !win.isDestroyed()) win.webContents.send('update-progress', Math.floor(progress.percent))
+})
+
+autoUpdater.on('update-downloaded', () => {
+  console.log('[Updater] Downloaded — forcing install')
+  if (win && !win.isDestroyed()) win.webContents.send('update-status', 'installing')
+  setTimeout(() => {
+    killAll()
+    autoUpdater.quitAndInstall(true, true)
+  }, 1500)
+})
+
+autoUpdater.on('error', err => console.error('[Updater] Error:', err))
 
 function startPythonServer() {
   return new Promise((resolve, reject) => {
@@ -114,6 +154,7 @@ app.whenReady().then(async () => {
     createWindow(null)
   }
   createWatermarkWindow()
+  checkForUpdates()
 })
 
 app.on('window-all-closed', () => {
