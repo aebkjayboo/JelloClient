@@ -1,5 +1,4 @@
-// Usage: SaveBar.watch(key, applyFn, resetFn) registers a pending change;
-// the bar shows automatically and Apply/Reset run every registered fn.
+// inspired by discord.
 const SaveBar = (() => {
   let pending = {}
   let bar = null

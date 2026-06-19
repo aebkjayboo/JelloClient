@@ -8,11 +8,6 @@ from core.settings import get_setting, set_setting
 from mods.base import assert_writable, hashes_match, safe_id
 from roblox.discovery import find_roblox_exe
 
-# Nothing reads CustomFont.ttf unless a font family JSON's assetId is
-# rewritten to point at it - Roblox's shipped families normally reference
-# its own real font files. We mirror Bloxstrap's ApplyModifications by
-# staging both the font and rewritten family JSONs, then syncing onto the
-# live install before each launch.
 CUSTOM_FONT_REL = os.path.join('content', 'fonts', 'CustomFont.ttf')
 FAMILIES_DIR_REL = os.path.join('content', 'fonts', 'families')
 CUSTOM_FONT_ASSET_ID = 'rbxasset://fonts/CustomFont.ttf'
@@ -49,7 +44,6 @@ def _live_paths() -> tuple[str, str, str] | None:
 
 
 def _rewrite_family_jsons(live_families_dir: str) -> None:
-    # Skips files already staged, matching Bloxstrap's "if exists: continue".
     if not os.path.isdir(live_families_dir):
         return
 
@@ -164,8 +158,6 @@ def apply_selected_font(font_id: str | None = None) -> tuple[bool, str]:
             assert_writable(live_font_target)
             os.remove(live_font_target)
 
-        # Roblox's original family jsons are never backed up, so they aren't
-        # restored here - the next install/update will recreate them.
         set_setting('font_id', 'default')
         return True, 'Font reset to default.'
 
@@ -192,7 +184,4 @@ def apply_selected_font(font_id: str | None = None) -> tuple[bool, str]:
 
 
 def resync_to_live() -> tuple[bool, str]:
-    # Roblox updates wipe and replace the version-* folder, so both the font
-    # and rewritten family JSONs need to be re-synced from staging on every
-    # launch, not just when the font was first chosen.
     return apply_selected_font(get_selected_font_id())

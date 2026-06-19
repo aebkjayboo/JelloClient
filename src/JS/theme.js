@@ -1,4 +1,4 @@
-// Theme is local-only (no server round trip) so it applies instantly on load.
+
 const STORAGE_KEY = 'jello_theme'
 const DEFAULTS = { mode: 'dark', accent: '#ffffff' }
 

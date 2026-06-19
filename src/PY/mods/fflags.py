@@ -75,8 +75,6 @@ def clear_all() -> None:
 
 
 def resync_to_live() -> tuple:
-    # Roblox wipes the version-* folder on every update, so this needs to
-    # run before each launch to re-apply the saved flags.
     exe = find_roblox_exe()
     if not exe:
         return False, 'Roblox installation not found.'

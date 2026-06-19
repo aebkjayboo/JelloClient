@@ -19,9 +19,7 @@ from integrations.RPC import close, clear_presence, JelloPresence
 app = Flask(__name__)
 CORS(app)
 
-# Electron doesn't surface this process's stdout, so mirror every printed
-# line (ours + Flask/werkzeug's request logs) into a buffer readable over
-# HTTP via /logs.
+
 LOG_BUFFER = collections.deque(maxlen=2000)
 
 

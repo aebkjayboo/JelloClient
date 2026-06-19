@@ -4,8 +4,6 @@ import stat
 
 
 def assert_writable(path: str) -> None:
-    # Roblox/Windows sometimes flags files under the install folder as
-    # read-only after an install or update; this clears that attribute.
     if not os.path.exists(path):
         return
     try:
