@@ -1,0 +1,41 @@
+Jello Client License
+
+Copyright (c) 2026 Sun™. All rights reserved.
+
+Jello ("the Software") is created and owned by Sun™. This license is written in the spirit
+of the MIT License: it is permissive and free. It differs only in that it makes plain where
+responsibility sits, and that use of the Software is also bound by Sun's Terms of Service.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of the Software
+to use, copy, and run it for any purpose they choose, at no cost. How you use the Software is
+your decision to make.
+
+You use the Software entirely at your own risk and on your own judgement. The choice to use
+it is yours, and so is the responsibility for that choice. Sun™ is not responsible or
+accountable for what you do with the Software, for the manner in which you use it, or for any
+consequence, loss, account action, or damage of any kind that results from using it.
+
+Use of the Software is also subject to Sun's Terms of Service, which are kept current, and
+are maintained daily, in the #information channel of the Sun Discord server at
+https://discord.gg/tpnP9NNBap. By using the Software you agree to those Terms as they stand
+at the time you use it. While it runs, the Software is in contact with Sun's servers and
+processes a limited set of technical identifiers, as set out in the Privacy Policy (see the
+PRIVACY file and the #information channel), which by using the Software you acknowledge.
+
+When you first use the Software, and only until it has completed once, Jello runs a brief
+identity step. It derives an identifier from your device, hashes it, and registers that hash
+with Sun's servers, along with information such as your IP address, for licensing and for
+enforcing these terms, including blacklists. This step is meant to finish quickly and then
+stop. If it is interrupted before it finishes, it runs again the next time the Software
+starts and keeps trying only until it has completed that one time, after which it does not
+run again. Nothing about this is hidden from you: it is described here and in the Privacy
+Policy, and it is why the consent shown before installation must be accepted first.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL SUN™ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+"Sun", "Sun™", "Jello", and the Jello logo are trademarks of Sun™. This license grants no
+right to use them, except as needed to identify the Software itself.

@@ -1,0 +1,400 @@
+<ui:JelloWindow x:Class="JelloClient.UI.InstallerWindow"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+                xmlns:ui="clr-namespace:JelloClient.UI"
+                Title="Install Jello Client"
+                Width="780"
+                Height="560"
+                ResizeMode="NoResize"
+                WindowStartupLocation="CenterScreen"
+                FontFamily="{StaticResource UiFont}"
+                Icon="/Assets/icon.ico">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="40"
+                            ResizeBorderThickness="0"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid x:Name="Root" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <TextBlock Text="Install Jello Client"
+                       Margin="20,0,0,0"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextSecondary}"
+                       VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,4,0"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                <Button Style="{StaticResource CloseButton}"
+                        Tag="{StaticResource IconClose}"
+                        ToolTip="Cancel the installation"
+                        Click="Close_Click" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="24,0,24,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="190" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="0,4,20,0">
+                <Rectangle Style="{StaticResource LogoMark}"
+                           Width="56"
+                           Height="56"
+                           HorizontalAlignment="Left"
+                           Margin="0,0,0,20" />
+
+                <TextBlock x:Name="StepOne" Style="{StaticResource InstallerStep}" Text="1.  Welcome" />
+                <TextBlock x:Name="StepTwo" Style="{StaticResource InstallerStep}" Text="2.  Setup" />
+                <TextBlock x:Name="StepThree" Style="{StaticResource InstallerStep}" Text="3.  Finish" />
+            </StackPanel>
+
+            <ScrollViewer Grid.Column="1" Style="{StaticResource PageScrollViewer}" Padding="0,0,16,8">
+                <Grid>
+                    <StackPanel x:Name="WelcomePage">
+                        <TextBlock Style="{StaticResource PageTitle}" Text="Welcome to Jello" />
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   TextWrapping="Wrap"
+                                   Text="Jello is a Roblox bootstrapper. It installs and launches Roblox for you, and along the way it can apply FastFlags, swap client files, tell Discord what you are playing and keep your disk tidy." />
+
+                        <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource CardHeader}" Text="What this will do" />
+                                <TextBlock Style="{StaticResource CardDescription}"
+                                           Margin="0,6,0,0"
+                                           TextWrapping="Wrap"
+                                           Text="Copy Jello into a folder you choose, add it to the list of installed programs so it can be uninstalled normally, and optionally create shortcuts and take over Roblox links so they launch through Jello." />
+                                <TextBlock Style="{StaticResource CardDescription}"
+                                           Margin="0,10,0,0"
+                                           TextWrapping="Wrap"
+                                           Text="Nothing about your existing Roblox install is changed until you launch a game through Jello." />
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="ExistingDataCard" Style="{StaticResource Card}" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Existing data found" />
+                                <TextBlock x:Name="ExistingDataText"
+                                           Style="{StaticResource CardDescription}"
+                                           Margin="0,6,0,0"
+                                           TextWrapping="Wrap"
+                                           Text="" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource LogoMark}" Width="22" Height="22" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                    <TextBlock Text="Sun™" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <TextBlock Style="{StaticResource CardHeader}" Text="License, Terms &amp; Privacy" Margin="0,10,0,0" />
+                                <TextBlock Style="{StaticResource CardDescription}"
+                                           Margin="0,6,0,0"
+                                           TextWrapping="Wrap"
+                                           Text="Jello is owned by Sun™ and is free to use however you choose. What you do with it is your decision, and Sun™ is not accountable for how you use it. Your use is covered by Sun's Terms of Service, kept current in the #information channel of the Sun Discord." />
+                                <TextBlock Style="{StaticResource CardDescription}"
+                                           Margin="0,10,0,0"
+                                           TextWrapping="Wrap"
+                                           Text="Privacy: while it runs, Jello is in contact with Sun's servers. Your hardware ID (HWID) is hashed, and your IP address and technical identifiers are used to run the service and to enforce the rules - including detecting rule-breakers and applying blacklists. The full Terms and Privacy Policy live in #information." />
+                                <Button x:Name="DiscordButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Open the Sun Discord  (#information)"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,12,0,0"
+                                        Click="Discord_Click" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="I accept" />
+                                    <TextBlock Style="{StaticResource CardDescription}"
+                                               TextWrapping="Wrap"
+                                               Text="I have read and accept the Jello License, Sun's Terms of Service, and the Privacy Policy." />
+                                </StackPanel>
+                                <CheckBox x:Name="AcceptToggle"
+                                          Grid.Column="1"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          Checked="Accept_Changed"
+                                          Unchecked="Accept_Changed" />
+                            </Grid>
+                        </Border>
+
+                        <TextBlock Style="{StaticResource CardDescription}"
+                                   Margin="0,16,0,0"
+                                   Text="Accept the terms above to continue." />
+                    </StackPanel>
+
+                    <StackPanel x:Name="SetupPage" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource PageTitle}" Text="Setup" />
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   TextWrapping="Wrap"
+                                   Text="Where Jello lives, how it looks, and what it takes over." />
+
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Install location" />
+
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="LocationBox"
+                                             Grid.Column="0"
+                                             Style="{StaticResource FluentTextBox}"
+                                             VerticalContentAlignment="Center"
+                                             TextChanged="Location_Changed" />
+                                    <Button Grid.Column="1"
+                                            Style="{StaticResource FluentButton}"
+                                            Content="Browse"
+                                            Margin="8,0,0,0"
+                                            Click="Browse_Click" />
+                                    <Button Grid.Column="2"
+                                            Style="{StaticResource FluentButton}"
+                                            Content="Reset"
+                                            Margin="8,0,0,0"
+                                            Click="ResetLocation_Click" />
+                                </Grid>
+                                <TextBlock x:Name="LocationNote"
+                                           Style="{StaticResource CardDescription}"
+                                           Margin="0,10,0,0"
+                                           TextWrapping="Wrap"
+                                           Text="" />
+                                <TextBlock x:Name="LocationError"
+                                           Margin="0,8,0,0"
+                                           FontSize="12.5"
+                                           TextWrapping="Wrap"
+                                           Visibility="Collapsed"
+                                           Foreground="{DynamicResource DangerFill}"
+                                           Text="" />
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Appearance" />
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Theme" />
+                                    <TextBlock x:Name="ThemeNote" Style="{StaticResource CardDescription}" Text="" />
+                                </StackPanel>
+                                <ComboBox x:Name="ThemeCombo"
+                                          Grid.Column="1"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="170"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          SelectionChanged="Theme_Changed" />
+                            </Grid>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Region" />
+                                    <TextBlock x:Name="LocaleNote"
+                                               Style="{StaticResource CardDescription}"
+                                               TextWrapping="Wrap"
+                                               Text="" />
+                                </StackPanel>
+                                <ComboBox x:Name="LocaleCombo"
+                                          Grid.Column="1"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="230"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          SelectionChanged="Locale_Changed" />
+                            </Grid>
+                        </Border>
+
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Shortcuts and startup" />
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Desktop shortcut" />
+                                    <TextBlock Style="{StaticResource CardDescription}" Text="Adds a Jello Client shortcut to your desktop." />
+                                </StackPanel>
+                                <CheckBox x:Name="DesktopToggle"
+                                          Grid.Column="1"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          IsChecked="True" />
+                            </Grid>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Start menu shortcut" />
+                                    <TextBlock Style="{StaticResource CardDescription}" Text="Puts Jello in the start menu so it shows up in search." />
+                                </StackPanel>
+                                <CheckBox x:Name="StartMenuToggle"
+                                          Grid.Column="1"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          IsChecked="True" />
+                            </Grid>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Launch Roblox through Jello" />
+                                    <TextBlock Style="{StaticResource CardDescription}"
+                                               TextWrapping="Wrap"
+                                               Text="Registers Jello for roblox-player links, so pressing Play on the website starts the game through Jello with your flags and modifications. Without this, only launches from Jello itself are affected." />
+                                </StackPanel>
+                                <CheckBox x:Name="ProtocolToggle"
+                                          Grid.Column="1"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          IsChecked="True" />
+                            </Grid>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Start with Windows" />
+                                    <TextBlock Style="{StaticResource CardDescription}"
+                                               TextWrapping="Wrap"
+                                               Text="Starts Jello quietly in the notification area when you sign in, so launches from the website are handled from the moment Windows is ready. You can turn this off later in Settings or from the Startup tab of Task Manager." />
+                                </StackPanel>
+                                <CheckBox x:Name="StartupToggle"
+                                          Grid.Column="1"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel x:Name="FinishPage" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource PageTitle}" Text="All set" />
+                        <TextBlock x:Name="FinishSummary"
+                                   Style="{StaticResource PageDescription}"
+                                   TextWrapping="Wrap"
+                                   Text="" />
+
+                        <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Open the settings" />
+                                    <TextBlock Style="{StaticResource CardDescription}" Text="Flags, modifications, integrations and everything else." />
+                                </StackPanel>
+                                <Button Grid.Column="1"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Settings"
+                                        Margin="16,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Click="OpenSettings_Click" />
+                            </Grid>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Go to the launcher" />
+                                    <TextBlock Style="{StaticResource CardDescription}" Text="Roblox is downloaded the first time you launch a game." />
+                                </StackPanel>
+                                <Button Grid.Column="1"
+                                        Style="{StaticResource AccentButton}"
+                                        Content="Open launcher"
+                                        Margin="16,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Click="OpenLauncher_Click" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+        <Border Grid.Row="2"
+                Background="{DynamicResource CardBackground}"
+                BorderBrush="{DynamicResource ControlStroke}"
+                BorderThickness="0,1,0,0"
+                Padding="24,12">
+            <Grid>
+                <TextBlock x:Name="FooterText"
+                           VerticalAlignment="Center"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextTertiary}"
+                           Text="" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="BackButton"
+                            Style="{StaticResource FluentButton}"
+                            Content="Back"
+                            MinWidth="100"
+                            IsEnabled="False"
+                            Click="Back_Click" />
+                    <Button x:Name="NextButton"
+                            Style="{StaticResource AccentButton}"
+                            Content="Next"
+                            MinWidth="100"
+                            Margin="8,0,0,0"
+                            Click="Next_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:JelloWindow>

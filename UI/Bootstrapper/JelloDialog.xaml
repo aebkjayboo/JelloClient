@@ -1,0 +1,56 @@
+<bs:BootstrapperWindow x:Class="JelloClient.UI.Bootstrapper.JelloDialog"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:bs="clr-namespace:JelloClient.UI.Bootstrapper"
+                       Width="440"
+                       Height="190"
+                       AllowsTransparency="True"
+                       Background="Transparent"
+                       Icon="/Assets/icon.ico">
+
+    <Border Background="{DynamicResource ApplicationBackground}"
+            BorderBrush="{DynamicResource ControlStroke}"
+            BorderThickness="1"
+            CornerRadius="8">
+        <Grid Margin="24,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Rectangle Style="{StaticResource LogoMark}" Width="40" Height="40" />
+                <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="Jello Client"
+                               FontFamily="{StaticResource PoppinsFont}"
+                               FontWeight="SemiBold"
+                               FontSize="17"
+                               Foreground="{DynamicResource TextPrimary}" />
+                    <TextBlock x:Name="MessageText"
+                               Text="Please wait..."
+                               FontSize="12.5"
+                               Foreground="{DynamicResource TextSecondary}"
+                               Margin="0,2,0,0"
+                               TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </StackPanel>
+
+            <ProgressBar x:Name="Progress"
+                         Grid.Row="1"
+                         Style="{StaticResource ThinProgressBar}"
+                         VerticalAlignment="Center"
+                         Margin="0,18,0,18"
+                         Minimum="0"
+                         Maximum="100"
+                         IsIndeterminate="True" />
+
+            <Button x:Name="CancelButton"
+                    Grid.Row="2"
+                    Style="{StaticResource FluentButton}"
+                    Content="Cancel"
+                    HorizontalAlignment="Right"
+                    Click="Cancel_Click" />
+        </Grid>
+    </Border>
+</bs:BootstrapperWindow>

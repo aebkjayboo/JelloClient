@@ -1,0 +1,44 @@
+# ---- Build output ----
+bin/
+obj/
+publish/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+*.dll
+*.exe
+*.pdb
+
+# ---- IDE / tooling ----
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userprefs
+*_i.c
+*_p.c
+*.rsuser
+
+# ---- NuGet ----
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ---- OS ----
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# ---- Private backend integration ----
+# Endpoints, API tokens, and the request-signing (HMAC) secret used to
+# authenticate the client to the server. Never committed, never shipped in an
+# extractable form. See Private/README.md.
+Private/

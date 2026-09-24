@@ -1,0 +1,2334 @@
+<ui:JelloWindow x:Class="JelloClient.SettingsWindow"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+                xmlns:ui="clr-namespace:JelloClient.UI"
+                xmlns:ctrl="clr-namespace:JelloClient.UI.Controls"
+                xmlns:conv="clr-namespace:JelloClient.UI.Converters"
+                Title="Jello Client Settings"
+                Width="1000"
+                Height="700"
+                MinWidth="820"
+                MinHeight="560"
+                WindowStartupLocation="CenterScreen"
+                ResizeMode="CanResize"
+                FontFamily="{StaticResource UiFont}"
+                Icon="/Assets/icon.ico">
+
+    <FrameworkElement.Resources>
+        <conv:TagColorConverter x:Key="TagColour" />
+        <conv:CountToBoolConverter x:Key="CountToBool" />
+    </FrameworkElement.Resources>
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="40"
+                            ResizeBorderThickness="6"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid x:Name="Root" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <TextBlock Text="Settings"
+                       Margin="24,0,0,0"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextSecondary}"
+                       VerticalAlignment="Center" />
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,4,0"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                <Button x:Name="MinimizeButton"
+                        Style="{StaticResource CaptionButton}"
+                        Tag="{StaticResource IconMinimize}"
+                        ToolTip="Minimize"
+                        Click="MinimizeButton_Click" />
+                <Button x:Name="MaximizeButton"
+                        Style="{StaticResource CaptionButton}"
+                        Tag="{StaticResource IconMaximize}"
+                        ToolTip="Maximize"
+                        Click="MaximizeButton_Click" />
+                <Button Style="{StaticResource CloseButton}"
+                        Tag="{StaticResource IconClose}"
+                        ToolTip="Close"
+                        Click="CloseButton_Click" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="24,4,0,14">
+            <Rectangle Style="{StaticResource LogoMark}"
+                       Width="64"
+                       Height="64"
+                       VerticalAlignment="Center" />
+            <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="Jello Client"
+                           FontFamily="{StaticResource PoppinsFont}"
+                           FontWeight="SemiBold"
+                           FontSize="22"
+                           Foreground="{DynamicResource TextPrimary}" />
+                <TextBlock x:Name="HeaderVersionText"
+                           FontFamily="{StaticResource PoppinsFont}"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextTertiary}"
+                           Margin="0,1,0,0" />
+            </StackPanel>
+        </StackPanel>
+
+        <TabControl x:Name="NavRailTabs" Grid.Row="2" Style="{StaticResource NavRail}">
+
+            <TabItem Style="{StaticResource NavItem}" Header="Deployment" Tag="{StaticResource IconPackage}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Deployment" />
+                    <TextBlock Style="{StaticResource PageDescription}" Text="Where Jello pulls Roblox from and how it starts the client." />
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock x:Name="InstalledVersionText" Style="{StaticResource CardHeader}" Text="Checking installation..." />
+                                <TextBlock x:Name="InstalledChannelText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <Button x:Name="UpdateRobloxButton"
+                                    Grid.Column="1"
+                                    Style="{StaticResource FluentButton}"
+                                    Content="Check for updates"
+                                    Margin="16,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Click="UpdateRoblox_Click" />
+                        </Grid>
+                    </Border>
+
+                    <Border x:Name="ProgressCard" Style="{StaticResource Card}" Visibility="Collapsed">
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock x:Name="ProgressStageText" Style="{StaticResource CardHeader}" Text="" />
+                                <Button Style="{StaticResource FluentButton}"
+                                        Content="Cancel"
+                                        HorizontalAlignment="Right"
+                                        Click="CancelInstall_Click" />
+                            </Grid>
+                            <ProgressBar x:Name="InstallProgressBar"
+                                         Style="{StaticResource ThinProgressBar}"
+                                         Margin="0,12,0,0"
+                                         Minimum="0"
+                                         Maximum="1" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Channel" />
+                                <TextBlock x:Name="ChannelHintText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button x:Name="ResetChannelButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Reset to production"
+                                        Margin="0,0,8,0"
+                                        Visibility="Collapsed"
+                                        Click="ResetChannel_Click" />
+                                <TextBox x:Name="ChannelBox"
+                                         Style="{StaticResource FluentTextBox}"
+                                         Width="180"
+                                         LostFocus="ChannelBox_LostFocus" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Multi-instance" />
+                                <TextBlock Style="{StaticResource CardDescription}"
+                                           TextWrapping="Wrap"
+                                           Text="Holds the Roblox singleton mutex so more than one client can run at once, and gives each extra client its own copy of the version folder, built from hard links so it costs no real disk space. Without that second part Roblox shuts the new client down on its own, whatever the mutex says. Jello must stay open for this to keep working." />
+                            </StackPanel>
+                            <CheckBox x:Name="MultiInstanceToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="MultiInstanceToggle_Changed"
+                                      Unchecked="MultiInstanceToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Reinstall Roblox" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Deletes every downloaded version folder so the next launch fetches a clean copy. Your flags and modifications are kept." />
+                            </StackPanel>
+                            <Button x:Name="ReinstallButton"
+                                    Grid.Column="1"
+                                    Style="{StaticResource FluentButton}"
+                                    Content="Delete installs"
+                                    Margin="16,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Click="Reinstall_Click" />
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Server matchmaking" Margin="0" VerticalAlignment="Center" />
+                        <Border Style="{StaticResource HelpBadge}"
+                                ToolTip="Before launching, Jello asks Roblox for a few servers, times the round trip to each, and joins the fastest - a real handshake, not a guess from a map.&#10;&#10;Roblox has largely closed this off: on this build the lookup answered once, then refused every request for the better part of an hour. Jello falls back to an ordinary launch whenever a lookup is refused, so the worst case is that it does nothing and adds a second to your launch. It is off by default for that reason. It sends your Roblox login with each lookup, read from this machine and sent only to roblox.com.">
+                            <TextBlock Style="{StaticResource HelpBadgeMark}" />
+                        </Border>
+                    </StackPanel>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Join the fastest server" />
+                                <TextBlock x:Name="MatchmakerText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <CheckBox x:Name="MatchmakerToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Click="Matchmaker_Click" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="How many to check" />
+                                <TextBlock x:Name="MatchmakerBudgetText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <ComboBox x:Name="MatchmakerBudgetCombo"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="120"
+                                          Margin="0,0,8,0"
+                                          SelectionChanged="MatchmakerBudget_Changed" />
+                                <ComboBox x:Name="MatchmakerFillCombo"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="140"
+                                          SelectionChanged="MatchmakerFill_Changed" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Launch behaviour" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Confirm launches" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Asks before starting Roblox, including when a launch comes in from the website." />
+                            </StackPanel>
+                            <CheckBox x:Name="ConfirmLaunchesToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="ConfirmLaunchesToggle_Changed"
+                                      Unchecked="ConfirmLaunchesToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Hide the launcher after launching" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Sends the launcher window to the notification area once Roblox is running." />
+                            </StackPanel>
+                            <CheckBox x:Name="HideOnLaunchToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="HideOnLaunchToggle_Changed"
+                                      Unchecked="HideOnLaunchToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Close to the notification area" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Closing the launcher hides it instead of quitting, so activity tracking and the singleton mutex survive. Use Exit in the tray menu to quit." />
+                            </StackPanel>
+                            <CheckBox x:Name="CloseToTrayToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="CloseToTrayToggle_Changed"
+                                      Unchecked="CloseToTrayToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Handle Roblox launch links" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Points the roblox: and roblox-player: links from the Roblox website at Jello instead of the stock bootstrapper, so your flags and modifications apply to every join." />
+                            </StackPanel>
+                            <CheckBox x:Name="ProtocolToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="ProtocolToggle_Changed"
+                                      Unchecked="ProtocolToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Start with Windows" />
+                                <TextBlock Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="Starts Jello in the notification area when you sign in, so launches from the website are handled right away. This is the same entry the Startup tab of Task Manager lists." />
+                            </StackPanel>
+                            <CheckBox x:Name="StartupToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="StartupToggle_Changed"
+                                      Unchecked="StartupToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItem}" Header="FastFlags" Tag="{StaticResource IconFlag}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="FastFlags" />
+                    <TextBlock Style="{StaticResource PageDescription}"
+                               TextWrapping="Wrap"
+                               Text="Manage your FastFlags. A tick in Preset means the flag comes from a preset on the Presets tab, a cross means you added it yourself. Written to ClientSettings\ClientAppSettings.json each time Jello launches Roblox." />
+
+                    <Border x:Name="FlagAuditBanner"
+                            Visibility="Collapsed"
+                            Margin="0,4,0,10"
+                            Padding="14,11"
+                            CornerRadius="6"
+                            Background="{DynamicResource DangerFill}">
+                        <StackPanel>
+                            <TextBlock x:Name="FlagAuditHeadline"
+                                       Foreground="White"
+                                       FontWeight="SemiBold"
+                                       FontSize="13.5"
+                                       TextWrapping="Wrap"
+                                       Text="" />
+                            <TextBlock x:Name="FlagAuditDetail"
+                                       Foreground="White"
+                                       FontSize="12.5"
+                                       Margin="0,4,0,0"
+                                       TextWrapping="Wrap"
+                                       Opacity="0.92"
+                                       Text="" />
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,10">
+                        <ToggleButton x:Name="EditorTabButton"
+                                      Style="{StaticResource ChipToggle}"
+                                      Content="Editor"
+                                      Margin="0,0,8,0"
+                                      IsChecked="True"
+                                      Click="FlagView_Click" />
+                        <ToggleButton x:Name="PresetsTabButton"
+                                      Style="{StaticResource ChipToggle}"
+                                      Content="Presets"
+                                      Click="FlagView_Click" />
+                    </StackPanel>
+
+                    <StackPanel x:Name="EditorView">
+                        <WrapPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource FluentButton}"
+                                    Content="Add new"
+                                    Margin="0,0,10,10"
+                                    Click="AddFlag_Click" />
+                            <Button Style="{StaticResource DangerButton}"
+                                    Content="Delete selected"
+                                    Margin="0,0,10,10"
+                                    MinWidth="130"
+                                    Click="DeleteSelectedFlags_Click">
+                                <Button.IsEnabled>
+                                    <Binding ElementName="FlagGrid" Path="SelectedItems.Count" Converter="{StaticResource CountToBool}" />
+                                </Button.IsEnabled>
+                            </Button>
+                            <Button Style="{StaticResource FluentButton}"
+                                    Content="Delete all"
+                                    Margin="0,0,10,10"
+                                    Click="DeleteAllFlags_Click" />
+                            <ToggleButton x:Name="ShowPresetFlagsButton"
+                                          Style="{StaticResource ChipToggle}"
+                                          Content="Show preset flags"
+                                          MinWidth="150"
+                                          Margin="0,0,10,10"
+                                          IsChecked="True"
+                                          Click="ShowPresetFlags_Click" />
+                        </WrapPanel>
+
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <TextBox x:Name="FlagSearchBox"
+                                         Style="{StaticResource FluentTextBox}"
+                                         Padding="10,7"
+                                         TextChanged="FlagSearch_Changed" />
+                                <TextBlock Text="Search for a flag by name or value"
+                                           Margin="12,0,0,0"
+                                           VerticalAlignment="Center"
+                                           IsHitTestVisible="False"
+                                           FontSize="13.5"
+                                           Foreground="{DynamicResource TextTertiary}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Text, ElementName=FlagSearchBox}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="14,0,0,0" VerticalAlignment="Center">
+                                <TextBlock x:Name="TotalFlagsText" Style="{StaticResource FlagsCounter}" Text="Flags added: 0" />
+                                <TextBlock x:Name="BloatText" Style="{StaticResource FlagsCounter}" Margin="0" Text="Bloat: 0%" />
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid>
+                            <Border Style="{StaticResource FlagGridSurface}" Height="360">
+                                <DataGrid x:Name="FlagGrid"
+                                          Style="{StaticResource FlagDataGrid}"
+                                          CellEditEnding="FlagGrid_CellEditEnding">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="Tags" Width="180" IsReadOnly="True" CanUserSort="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ItemsControl ItemsSource="{Binding VisibleTags}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Border Style="{StaticResource TagPill}"
+                                                                        Background="{Binding ., Converter={StaticResource TagColour}}">
+                                                                    <TextBlock Style="{StaticResource TagText}" Text="{Binding}" />
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Preset" Width="60" IsReadOnly="True" CanUserSort="False">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding PresetGlyph}"
+                                                               Foreground="{Binding PresetBrush}"
+                                                               FontSize="14"
+                                                               FontWeight="Bold"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Name" Width="2*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <Border Visibility="{Binding RefusedVisibility}"
+                                                                Background="{DynamicResource DangerFill}"
+                                                                CornerRadius="3"
+                                                                Padding="5,1"
+                                                                Margin="0,0,7,0"
+                                                                VerticalAlignment="Center"
+                                                                ToolTip="Roblox refused this flag on the last launch. It is saved here, but it does nothing.">
+                                                            <TextBlock Text="refused"
+                                                                       Foreground="White"
+                                                                       FontSize="10.5"
+                                                                       FontWeight="SemiBold" />
+                                                        </Border>
+                                                        <TextBlock Text="{Binding Name}"
+                                                                   VerticalAlignment="Center"
+                                                                   TextTrimming="CharacterEllipsis"
+                                                                   FontFamily="Cascadia Mono, Consolas" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                                             Style="{StaticResource FlagCellEditor}"
+                                                             FontFamily="Cascadia Mono, Consolas" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTextColumn Header="Value"
+                                                            Width="*"
+                                                            Binding="{Binding Value}"
+                                                            EditingElementStyle="{StaticResource FlagCellEditor}"
+                                                            FontFamily="Cascadia Mono, Consolas">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Border>
+
+                            <StackPanel x:Name="EmptyStatePanel"
+                                        Margin="24"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        IsHitTestVisible="False"
+                                        Visibility="Collapsed">
+                                <Path Data="{StaticResource IconFlag}"
+                                      Stroke="{DynamicResource TextTertiary}"
+                                      StrokeThickness="1.2"
+                                      Width="34"
+                                      Height="34"
+                                      Stretch="Uniform"
+                                      HorizontalAlignment="Center" />
+                                <TextBlock x:Name="EmptyStateText"
+                                           Margin="0,12,0,0"
+                                           FontSize="14"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource TextTertiary}"
+                                           Text="Go to Presets to add flags, or use Add new." />
+                            </StackPanel>
+                        </Grid>
+
+                        <WrapPanel Orientation="Horizontal" Margin="0,10,0,0">
+                            <Button Style="{StaticResource FluentButton}"
+                                    Content="Export JSON"
+                                    Margin="0,0,10,0"
+                                    Click="ExportFlags_Click" />
+                            <Button Style="{StaticResource FluentButton}"
+                                    Content="Copy flags"
+                                    Margin="0,0,10,0"
+                                    Click="CopyFlags_Click" />
+                            <Button Style="{StaticResource FluentButton}"
+                                    Content="Import JSON"
+                                    Margin="0,0,10,0"
+                                    Click="ImportFlags_Click" />
+                            <Button x:Name="FixFlagsButton"
+                                    Style="{StaticResource FluentButton}"
+                                    Content="Fix problems"
+                                    Margin="0,0,10,0"
+                                    Visibility="Collapsed"
+                                    Click="FixFlags_Click" />
+                            <TextBlock x:Name="FlagStatusText"
+                                       Style="{StaticResource FlagsCaption}"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       MaxWidth="420"
+                                       Text="" />
+                        </WrapPanel>
+
+                        <Border x:Name="LiveFlagCard" Style="{StaticResource Card}" Margin="0,14,0,0">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource CardHeader}" Text="Live flags" />
+                                            <Border Background="{DynamicResource WarningText}"
+                                                    CornerRadius="7"
+                                                    Padding="7,1"
+                                                    Margin="10,0,0,0"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="RISKY"
+                                                           FontSize="10.5"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource ApplicationBackground}" />
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock Style="{StaticResource CardDescription}"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,4,0,0"
+                                                   Text="Writes your flags a second time straight into the running client's memory, after it has started, through the same native calls the reference tool uses. This can crash Roblox instantly, and Roblox may treat writes into its process as tampering. The normal file route always runs first and is unaffected by this." />
+                                        <TextBlock x:Name="LiveFlagStatus"
+                                                   Style="{StaticResource CardDescription}"
+                                                   Foreground="{DynamicResource TextTertiary}"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,8,0,0"
+                                                   Text="" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                        <Button x:Name="CheckLiveFlagsButton"
+                                                Style="{StaticResource FluentButton}"
+                                                Content="Check flags"
+                                                Margin="0,0,8,0"
+                                                Visibility="Collapsed"
+                                                ToolTip="Reads the offset dump only. Writes nothing."
+                                                Click="CheckLiveFlags_Click" />
+                                        <Button x:Name="ApplyLiveFlagsButton"
+                                                Style="{StaticResource FluentButton}"
+                                                Content="Apply now"
+                                                Margin="0,0,12,0"
+                                                Visibility="Collapsed"
+                                                ToolTip="Writes the flags into the Roblox that is running right now"
+                                                Click="ApplyLiveFlags_Click" />
+                                        <CheckBox x:Name="LiveFlagToggle"
+                                                  Style="{StaticResource ToggleSwitch}"
+                                                  VerticalAlignment="Center"
+                                                  Click="LiveFlags_Click" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Expander x:Name="HistoryExpander"
+                                  Style="{StaticResource FluentExpander}"
+                                  Margin="0,12,0,0"
+                                  Header="FastFlag history"
+                                  ToolTip="Every change is snapshotted before it is applied. Select an entry and press Undo selected, or double click it, to go back to that point.">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <Button Style="{StaticResource FluentButton}"
+                                            Content="Undo selected"
+                                            Margin="0,0,10,0"
+                                            Click="UndoHistory_Click" />
+                                    <Button Style="{StaticResource FluentButton}"
+                                            Content="Clear history"
+                                            Margin="0,0,10,0"
+                                            Click="ClearHistory_Click" />
+                                    <TextBlock x:Name="HistoryCountText"
+                                               Style="{StaticResource FlagsCaption}"
+                                               VerticalAlignment="Center"
+                                               Text="No changes recorded" />
+                                </StackPanel>
+
+                                <ListBox x:Name="HistoryList"
+                                         Style="{StaticResource FluentListBox}"
+                                         MaxHeight="220"
+                                         MouseDoubleClick="HistoryList_DoubleClick">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="0,2">
+                                                <TextBlock Text="{Binding Line}"
+                                                           FontSize="13"
+                                                           TextWrapping="Wrap"
+                                                           Foreground="{DynamicResource TextPrimary}" />
+                                                <TextBlock Text="{Binding Detail}"
+                                                           FontFamily="Cascadia Mono, Consolas"
+                                                           FontSize="11"
+                                                           Margin="0,2,0,0"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           Foreground="{DynamicResource TextTertiary}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Expander>
+
+                        <Expander x:Name="AdvancedExpander"
+                                  Style="{StaticResource FluentExpander}"
+                                  Margin="0,10,0,0"
+                                  Header="Raw JSON editor"
+                                  ToolTip="Edit the flag object directly. Invalid JSON is rejected on save.">
+                            <StackPanel>
+                                <ctrl:CodeEditor x:Name="FastFlagsBox"
+                                                 Style="{StaticResource CodeEditorStyle}"
+                                                 Height="220" />
+                                <Grid Margin="0,12,0,0">
+                                    <TextBlock x:Name="FastFlagsStatus"
+                                               VerticalAlignment="Center"
+                                               FontSize="12"
+                                               Foreground="{DynamicResource TextTertiary}" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Style="{StaticResource FluentButton}"
+                                                Content="Reload"
+                                                Click="ReloadFastFlags_Click" />
+                                        <Button Style="{StaticResource AccentButton}"
+                                                Content="Save flags"
+                                                Margin="8,0,0,0"
+                                                Click="SaveFastFlags_Click" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+
+                    <StackPanel x:Name="PresetsView" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   Margin="0,0,0,4"
+                                   Text="One-click sets of flags, taken from Voidstrap's preset table. Each says which flags it writes." />
+
+                        <ItemsControl x:Name="PresetGroups">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,10,0,0">
+                                        <TextBlock Style="{StaticResource CardHeader}" Text="{Binding Name}" FontSize="14" />
+                                        <TextBlock Style="{StaticResource CardDescription}" Text="{Binding Description}" Margin="0,0,0,4" />
+                                        <ItemsControl ItemsSource="{Binding Items}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Style="{StaticResource Card}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                                <TextBlock Style="{StaticResource CardHeader}" Text="{Binding Name}" />
+                                                                <TextBlock Style="{StaticResource CardDescription}" Text="{Binding Description}" />
+                                                                <TextBlock Style="{StaticResource CardDescription}"
+                                                                           Foreground="{DynamicResource TextTertiary}"
+                                                                           FontFamily="Cascadia Mono, Consolas"
+                                                                           FontSize="11"
+                                                                           Margin="0,4,0,0"
+                                                                           Text="{Binding FlagSummary}" />
+                                                            </StackPanel>
+                                                            <CheckBox Grid.Column="1"
+                                                                      Style="{StaticResource ToggleSwitch}"
+                                                                      Margin="16,0,0,0"
+                                                                      VerticalAlignment="Center"
+                                                                      IsChecked="{Binding Enabled, Mode=TwoWay}" />
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItem}" Header="Modifications" Tag="{StaticResource IconPuzzle}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Modifications" />
+                    <TextBlock Style="{StaticResource PageDescription}" Text="Files placed here are copied over the version folder after extraction, mirroring its directory structure." />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Skybox" Margin="0,16,0,0" />
+
+                    <TextBlock Style="{StaticResource PageDescription}"
+                               Margin="0,0,0,4"
+                               TextWrapping="Wrap"
+                               Text="The sky Roblox falls back to when a place has not set one of its own. Six pictures make the cube. A place with its own Sky object overrides this, so it will not show everywhere." />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Custom sky" />
+                                <TextBlock x:Name="SkyboxText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button Style="{StaticResource FluentButton}"
+                                        Content="One picture"
+                                        Margin="0,0,8,0"
+                                        Click="ChooseSkyboxAll_Click" />
+                                <Button x:Name="ClearSkyboxButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Remove"
+                                        Click="ClearSkybox_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardHeader}" Text="Faces" Margin="0,0,0,8" />
+                            <ItemsControl x:Name="SkyboxFaces">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="3" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Modifications folder" />
+                                <TextBlock x:Name="ModsPathText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <Button Grid.Column="1"
+                                    Style="{StaticResource FluentButton}"
+                                    Content="Open folder"
+                                    Margin="16,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Click="OpenMods_Click" />
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Presets" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Custom font" />
+                                <TextBlock x:Name="CustomFontText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button x:Name="ChooseFontButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Choose font"
+                                        Click="ChooseFont_Click" />
+                                <Button x:Name="RemoveFontButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Remove"
+                                        Margin="8,0,0,0"
+                                        Click="RemoveFont_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Mouse cursor" />
+                                <TextBlock x:Name="CursorAssetText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <ComboBox x:Name="CursorCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="160"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="CursorCombo_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Emoji font" />
+                                <TextBlock x:Name="EmojiStatusText" Style="{StaticResource CardDescription}" Text="Replaces the in-game emoji font. Downloaded on demand, so nothing needs to be supplied." />
+                            </StackPanel>
+                            <ComboBox x:Name="EmojiCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="160"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="EmojiCombo_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Old character sounds" />
+                                <TextBlock x:Name="SoundsAssetText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <CheckBox x:Name="OldSoundsToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="OldSoundsToggle_Changed"
+                                      Unchecked="OldSoundsToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Old avatar editor background" />
+                                <TextBlock x:Name="AvatarAssetText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <CheckBox x:Name="OldAvatarToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="OldAvatarToggle_Changed"
+                                      Unchecked="OldAvatarToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Preset assets" />
+                                <TextBlock x:Name="ModAssetsPathText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <Button Grid.Column="1"
+                                    Style="{StaticResource FluentButton}"
+                                    Content="Open folder"
+                                    Margin="16,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Click="OpenModAssets_Click" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItem}" Header="Integrations" Tag="{StaticResource IconPlug}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Integrations" />
+                    <TextBlock Style="{StaticResource PageDescription}" Text="What Jello does while you are in a game, and what it tells the rest of your desktop about it." />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,10">
+                        <ToggleButton x:Name="ActivityTabButton"
+                                      Style="{StaticResource ChipToggle}"
+                                      Content="Activity"
+                                      Margin="0,0,8,0"
+                                      IsChecked="True"
+                                      Click="IntegrationView_Click" />
+                        <ToggleButton x:Name="DiscordTabButton"
+                                      Style="{StaticResource ChipToggle}"
+                                      Content="Discord"
+                                      Margin="0,0,8,0"
+                                      Click="IntegrationView_Click" />
+                        <ToggleButton x:Name="ProgramsTabButton"
+                                      Style="{StaticResource ChipToggle}"
+                                      Content="Programs"
+                                      Click="IntegrationView_Click" />
+                    </StackPanel>
+
+                    <StackPanel x:Name="ActivityView">
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   Margin="0,0,0,4"
+                                   TextWrapping="Wrap"
+                                   Text="Everything here reads the Roblox client log. Nothing is injected into the game." />
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Game icon on the taskbar" />
+                                <TextBlock x:Name="GameIconText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button x:Name="CustomIconButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Custom"
+                                        Margin="0,0,8,0"
+                                        Click="ChooseCustomIcon_Click" />
+                                <Button x:Name="ClearCustomIconButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Clear"
+                                        Margin="0,0,8,0"
+                                        Click="ClearCustomIcon_Click" />
+                                <CheckBox x:Name="GameIconToggle"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          VerticalAlignment="Center"
+                                          Click="GameIcon_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Activity tracking" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Tails the Roblox log to work out which game and server you are in. Everything below depends on this." />
+                            </StackPanel>
+                            <CheckBox x:Name="ActivityTrackingToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="ActivityTrackingToggle_Changed"
+                                      Unchecked="ActivityTrackingToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Look up server location" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Sends the server's IP address to ipinfo.io to resolve a city and country. Leave this off if you would rather not contact a third party." />
+                            </StackPanel>
+                            <CheckBox x:Name="ServerDetailsToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="ServerDetailsToggle_Changed"
+                                      Unchecked="ServerDetailsToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Notify on server join" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Shows one notification each time you land in a new server. Clicking it opens the server information panel." />
+                            </StackPanel>
+                            <CheckBox x:Name="NotifyJoinToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="NotifyJoinToggle_Changed"
+                                      Unchecked="NotifyJoinToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    </StackPanel>
+
+                    <StackPanel x:Name="DiscordView" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   Margin="0,0,0,4"
+                                   TextWrapping="Wrap"
+                                   Text="Publishes what you are playing to Discord over its local pipe. Discord has to be running on this machine; nothing is sent anywhere else." />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Show game activity on Discord" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Publishes the experience name, creator, server type and elapsed time to Discord over its local IPC pipe. Presence only appears once you are actually in an experience, not while Roblox sits on the home screen." />
+                            </StackPanel>
+                            <CheckBox x:Name="RichPresenceToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="RichPresenceToggle_Changed"
+                                      Unchecked="RichPresenceToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Hide the join button" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Removes the Join server button from your presence, so nobody can jump into your public server from Discord. See game page always stays." />
+                            </StackPanel>
+                            <CheckBox x:Name="HideRpcButtonsToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="HideRpcButtonsToggle_Changed"
+                                      Unchecked="HideRpcButtonsToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Show how full the server is" />
+                                <TextBlock Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="Adds &quot;(4 of 12)&quot; to your Discord status, and puts the server kind and location on the small badge. Both come from the log Jello already reads." />
+                            </StackPanel>
+                            <CheckBox x:Name="ServerFillToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Click="ServerFill_Click" />
+                        </Grid>
+                    </Border>
+                    </StackPanel>
+
+                    <StackPanel x:Name="ProgramsView" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   Margin="0,0,0,4"
+                                   TextWrapping="Wrap"
+                                   Text="Programs launched alongside Roblox. Anything set to close automatically is shut down when Roblox exits." />
+                    <Border Style="{StaticResource Card}">
+                        <Grid Height="230">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="230" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <ListBox x:Name="IntegrationsList"
+                                     Grid.Row="0"
+                                     Grid.Column="0"
+                                     Margin="0,0,12,0"
+                                     Style="{StaticResource FluentListBox}"
+                                     DisplayMemberPath="Name"
+                                     SelectionChanged="IntegrationSelection_Changed" />
+
+                            <Grid Grid.Row="1" Grid.Column="0" Margin="0,8,12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="8" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="New"
+                                        HorizontalContentAlignment="Center"
+                                        Click="AddIntegration_Click" />
+                                <Button x:Name="DeleteIntegrationButton"
+                                        Grid.Column="2"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Delete"
+                                        HorizontalContentAlignment="Center"
+                                        Click="DeleteIntegration_Click" />
+                            </Grid>
+
+                            <TextBlock x:Name="NoIntegrationText"
+                                       Grid.Row="0"
+                                       Grid.RowSpan="2"
+                                       Grid.Column="1"
+                                       Text="No integration selected, please select or add a new one"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource TextTertiary}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
+
+                            <StackPanel x:Name="IntegrationDetail"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="1"
+                                        Visibility="Collapsed">
+                                <TextBlock Style="{StaticResource InfoLabel}" Text="Name" />
+                                <TextBox x:Name="IntegrationNameBox"
+                                         Style="{StaticResource FluentTextBox}"
+                                         Margin="0,0,0,10"
+                                         TextChanged="IntegrationName_Changed" />
+
+                                <TextBlock Style="{StaticResource InfoLabel}" Text="Application" />
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="IntegrationLocationBox"
+                                             Grid.Column="0"
+                                             Style="{StaticResource FluentTextBox}"
+                                             LostFocus="IntegrationLocation_Changed" />
+                                    <Button Grid.Column="1"
+                                            Style="{StaticResource FluentButton}"
+                                            Content="Browse"
+                                            Margin="8,0,0,0"
+                                            Click="BrowseIntegration_Click" />
+                                </Grid>
+
+                                <TextBlock Style="{StaticResource InfoLabel}" Text="Launch arguments" />
+                                <TextBox x:Name="IntegrationArgsBox"
+                                         Style="{StaticResource FluentTextBox}"
+                                         Height="54"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap"
+                                         VerticalScrollBarVisibility="Auto"
+                                         Margin="0,0,0,10"
+                                         LostFocus="IntegrationArgs_Changed" />
+
+                                <CheckBox x:Name="IntegrationAutoCloseBox"
+                                          Content="Close automatically when Roblox exits"
+                                          Foreground="{DynamicResource TextSecondary}"
+                                          Checked="IntegrationAutoClose_Changed"
+                                          Unchecked="IntegrationAutoClose_Changed" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItem}" Header="Optimizations" Tag="{StaticResource IconSpark}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Optimizations" />
+                    <TextBlock Style="{StaticResource PageDescription}" Text="Reclaim disk space taken by old installs, caches and logs. Nothing is deleted until you review the list and confirm." />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Performance" Margin="0,16,0,0" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Quieten Roblox when you switch away" />
+                                <TextBlock x:Name="DuckAudioText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <ComboBox x:Name="DuckLevelCombo"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="120"
+                                          Margin="0,0,8,0"
+                                          SelectionChanged="DuckLevel_Changed" />
+                                <CheckBox x:Name="DuckAudioToggle"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          VerticalAlignment="Center"
+                                          Click="DuckAudio_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="How much of the machine Roblox gets" />
+                                <TextBlock x:Name="ResourceText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <ComboBox x:Name="CoreLimitCombo"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="130"
+                                          Margin="0,0,8,0"
+                                          SelectionChanged="CoreLimit_Changed" />
+                                <ComboBox x:Name="PriorityCombo"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="140"
+                                          SelectionChanged="Priority_Changed" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Frame rate cap" />
+                                <TextBlock x:Name="FramerateText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <ComboBox x:Name="FramerateCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="190"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="Framerate_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Display" />
+                                <TextBlock x:Name="DisplayText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <ComboBox x:Name="DisplayCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="250"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="Display_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Graphics API" />
+                                <TextBlock x:Name="RendererText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <ComboBox x:Name="RendererCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="190"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="Renderer_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Quality level" />
+                                <TextBlock x:Name="QualityText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <ComboBox x:Name="QualityCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="190"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="Quality_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Show the frame counter" />
+                                <TextBlock Style="{StaticResource CardDescription}"
+                                           TextWrapping="Wrap"
+                                           Text="Draws the frame rate in the corner of the client. Handy for checking a change did something." />
+                            </StackPanel>
+                            <CheckBox x:Name="ShowFpsToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Click="ShowFps_Click" />
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Automatic cleanup" Margin="0,16,0,0" />
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Run cleanup on a schedule" />
+                                    <TextBlock x:Name="AutoCleanupText" Style="{StaticResource CardDescription}" Text="" />
+                                </StackPanel>
+                                <ComboBox x:Name="AutoCleanupCombo"
+                                          Grid.Column="1"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="170"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          SelectionChanged="AutoCleanupMode_Changed" />
+                            </Grid>
+
+                            <Grid x:Name="AutoCleanupIntervalRow" Margin="0,14,0,0" Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="How often" FontSize="13" />
+                                    <TextBlock x:Name="AutoCleanupNextText" Style="{StaticResource CardDescription}" Text="" />
+                                </StackPanel>
+                                <ctrl:IntervalPicker x:Name="AutoCleanupPicker"
+                                                     Grid.Column="1"
+                                                     Style="{StaticResource IntervalPickerStyle}"
+                                                     Margin="16,0,0,0"
+                                                     VerticalAlignment="Center"
+                                                     MinimumMinutes="15"
+                                                     MaximumMinutes="10080" />
+                            </Grid>
+
+                            <Grid Margin="0,14,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Include the Roblox asset cache" FontSize="13" />
+                                    <TextBlock Style="{StaticResource CardDescription}"
+                                               TextWrapping="Wrap"
+                                               Text="Off by default. It frees the most space, but Roblox has to download those assets again, so the next join is slower. Old versions, part-finished downloads and logs are always included." />
+                                </StackPanel>
+                                <CheckBox x:Name="AutoCleanupCacheToggle"
+                                          Grid.Column="1"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          Click="AutoCleanupCache_Click" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Clean now" Margin="0,16,0,0" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Cleanup" />
+                                <TextBlock x:Name="CleanupSummaryText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="Looking..." />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button x:Name="CleanButton"
+                                        Style="{StaticResource AccentButton}"
+                                        Content="Clean"
+                                        IsEnabled="False"
+                                        Click="RunCleanup_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <ItemsControl x:Name="CleanupGroups" Margin="0,4,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource Card}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0"
+                                                  Style="{StaticResource ToggleSwitch}"
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,14,0"
+                                                  IsChecked="{Binding Selected, Mode=TwoWay}"
+                                                  IsEnabled="{Binding HasItems}" />
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Style="{StaticResource CardHeader}" Text="{Binding Title}" />
+                                            <TextBlock Style="{StaticResource CardDescription}" Text="{Binding Description}" />
+                                            <TextBlock Style="{StaticResource CardDescription}"
+                                                       Foreground="{DynamicResource TextTertiary}"
+                                                       Margin="0,4,0,0"
+                                                       Text="{Binding Detail}" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2"
+                                                   VerticalAlignment="Center"
+                                                   Margin="16,0,0,0"
+                                                   FontSize="15"
+                                                   FontFamily="{StaticResource PoppinsFont}"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource TextPrimary}"
+                                                   Text="{Binding Size}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItem}" Header="Appearance" Tag="{StaticResource IconPalette}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Appearance" />
+                    <TextBlock Style="{StaticResource PageDescription}" Text="How Jello itself looks, and what it changes inside Roblox." />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Theme" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Colour theme" />
+                                <TextBlock x:Name="ThemeText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <ComboBox x:Name="ThemeCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="170"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="ThemeCombo_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Region" />
+                                <TextBlock x:Name="LocaleText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <ComboBox x:Name="LocaleCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="230"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="LocaleCombo_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Bootstrapper" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Dialog style" />
+                                <TextBlock x:Name="BootstrapperStyleText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button Style="{StaticResource FluentButton}"
+                                        Content="Preview"
+                                        Margin="0,0,8,0"
+                                        Click="PreviewBootstrapper_Click" />
+                                <ComboBox x:Name="BootstrapperStyleCombo"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="160"
+                                          SelectionChanged="BootstrapperStyleCombo_Changed" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Custom themes" />
+                                <TextBlock x:Name="ThemeStatusText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button Style="{StaticResource FluentButton}"
+                                        Content="Open folder"
+                                        Margin="0,0,8,0"
+                                        Click="OpenThemes_Click" />
+                                <Button Style="{StaticResource FluentButton}"
+                                        Content="Reload"
+                                        Margin="0,0,8,0"
+                                        Click="ReloadThemes_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Dialog icon" />
+                                <TextBlock x:Name="BootstrapperIconText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button Style="{StaticResource FluentButton}"
+                                        Content="Choose icon"
+                                        Click="ChooseIcon_Click" />
+                                <Button x:Name="ResetIconButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Reset"
+                                        Margin="8,0,0,0"
+                                        Click="ResetIcon_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Launcher" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Layout" />
+                                <TextBlock x:Name="LayoutText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button Style="{StaticResource FluentButton}"
+                                        Content="Preview"
+                                        Margin="0,0,8,0"
+                                        Click="PreviewLayout_Click" />
+                                <ComboBox x:Name="LayoutCombo"
+                                          Style="{StaticResource FluentComboBox}"
+                                          Width="150"
+                                          SelectionChanged="LayoutCombo_Changed" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Roblox shortcut" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Desktop shortcut icon" />
+                                <TextBlock x:Name="ShortcutText" Style="{StaticResource CardDescription}" Text="" />
+                                <TextBlock Style="{StaticResource CardDescription}"
+                                           Foreground="{DynamicResource TextTertiary}"
+                                           Margin="0,4,0,0"
+                                           TextWrapping="Wrap"
+                                           Text="Roblox's own executable is signed, so its embedded icon cannot be replaced without breaking that signature. This makes a shortcut that launches Roblox through Jello with the icon you pick instead." />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button Style="{StaticResource FluentButton}"
+                                        Content="Choose icon"
+                                        Margin="0,0,8,0"
+                                        Click="ChooseShortcutIcon_Click" />
+                                <Button x:Name="RemoveShortcutButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Remove"
+                                        Click="RemoveShortcut_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Roblox app theme" />
+
+                    <TextBlock Style="{StaticResource PageDescription}"
+                               Margin="0,0,0,4"
+                               TextWrapping="Wrap"
+                               Text="Light or dark for the Roblox app itself - the home screen where you browse games. This is the real theme, not a picture laid over it: the Roblox app asks Windows what colour mode to use, so setting that here changes it properly, and the running client follows straight away without a relaunch.&#10;&#10;The catch is that it is a Windows setting, so every other program on this computer changes with it. Leave alone does nothing at all. The colour themes in Roblox's own Device Preferences, like Lava Glow, are a Roblox Plus feature chosen on Roblox's servers and nothing here can reach them." />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="App theme" />
+                                <TextBlock x:Name="RobloxThemeText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <ComboBox x:Name="RobloxThemeCombo"
+                                      Grid.Column="1"
+                                      Style="{StaticResource FluentComboBox}"
+                                      Width="150"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      SelectionChanged="RobloxTheme_Changed" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItem}" Header="Lab" Tag="{StaticResource IconFlask}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Lab" />
+                    <TextBlock Style="{StaticResource PageDescription}"
+                               TextWrapping="Wrap"
+                               Text="Experimental. Everything here reads the running Roblox client&apos;s memory directly, using the community offset tables for your build. It is off until you turn it on, and it is separate from the rest of Jello on purpose." />
+
+                    <Border Style="{StaticResource Card}"
+                            Margin="0,12,0,0"
+                            Padding="14,11"
+                            Background="{DynamicResource DangerFill}">
+                        <TextBlock Foreground="White"
+                                   FontSize="12.5"
+                                   TextWrapping="Wrap"
+                                   Text="Reading another program&apos;s memory is not something anti-cheat is meant to see, even when only reading. Nothing here writes to the client or touches a game. Use it on your own account, at your own discretion." />
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Enable the Lab" />
+                                <TextBlock x:Name="LabText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <CheckBox x:Name="LabToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Click="Lab_Click" />
+                        </Grid>
+                    </Border>
+
+                    <StackPanel x:Name="LabTools" Visibility="Collapsed">
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Recolour the app" Margin="0,16,0,0" />
+
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   Margin="0,0,0,4"
+                                   TextWrapping="Wrap"
+                                   Text="Tints the Roblox app&apos;s own frames by writing to them directly - the real home screen, not a layer over it. This is the one thing that reaches it: no script, no injection. It writes to the client&apos;s memory, so it is experimental and off by default." />
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Tint the app" />
+                                    <TextBlock x:Name="TintText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                                </StackPanel>
+                                <CheckBox x:Name="TintToggle"
+                                          Grid.Column="1"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          Margin="16,0,0,0"
+                                          VerticalAlignment="Center"
+                                          Click="Tint_Click" />
+                            </Grid>
+                        </Border>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Colour" />
+                                    <TextBlock Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="Full strength paints the flat colour; lower keeps some of the original so panels stay readable." />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                    <Border x:Name="TintSwatch"
+                                            Width="26"
+                                            Height="26"
+                                            CornerRadius="4"
+                                            Margin="0,0,8,0"
+                                            Cursor="Hand"
+                                            ToolTip="Pick a colour"
+                                            BorderBrush="{DynamicResource ControlStrokeSecondary}"
+                                            BorderThickness="1"
+                                            VerticalAlignment="Center"
+                                            MouseLeftButtonUp="TintSwatch_Click" />
+                                    <TextBox x:Name="TintColourBox"
+                                             Style="{StaticResource FluentTextBox}"
+                                             Width="110"
+                                             Margin="0,0,8,0"
+                                             FontFamily="Cascadia Mono, Consolas"
+                                             TextChanged="TintColour_Changed" />
+                                    <ComboBox x:Name="TintStrengthCombo"
+                                              Style="{StaticResource FluentComboBox}"
+                                              Width="130"
+                                              SelectionChanged="TintStrength_Changed" />
+
+                                    <Popup x:Name="ColorPickerPopup"
+                                           StaysOpen="False"
+                                           AllowsTransparency="True"
+                                           Placement="Bottom"
+                                           PlacementTarget="{Binding ElementName=TintSwatch}"
+                                           VerticalOffset="6"
+                                           Closed="ColorPicker_Closed">
+                                        <Border Background="{DynamicResource PopupBackground}"
+                                                BorderBrush="{DynamicResource ControlStroke}"
+                                                BorderThickness="1"
+                                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                                Padding="12"
+                                                SnapsToDevicePixels="True">
+                                            <StackPanel Width="200">
+                                                <Border Width="200" Height="150" CornerRadius="4" ClipToBounds="True"
+                                                        BorderBrush="{DynamicResource ControlStrokeSecondary}" BorderThickness="1">
+                                                    <Grid>
+                                                        <Rectangle x:Name="SvHueRect" Fill="#FF0000" />
+                                                        <Rectangle>
+                                                            <Rectangle.Fill>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                                    <GradientStop Offset="0" Color="#FFFFFFFF" />
+                                                                    <GradientStop Offset="1" Color="#00FFFFFF" />
+                                                                </LinearGradientBrush>
+                                                            </Rectangle.Fill>
+                                                        </Rectangle>
+                                                        <Rectangle>
+                                                            <Rectangle.Fill>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                                    <GradientStop Offset="0" Color="#00000000" />
+                                                                    <GradientStop Offset="1" Color="#FF000000" />
+                                                                </LinearGradientBrush>
+                                                            </Rectangle.Fill>
+                                                        </Rectangle>
+                                                        <Canvas x:Name="SvCanvas" Background="Transparent"
+                                                                MouseLeftButtonDown="Sv_MouseDown"
+                                                                MouseMove="Sv_MouseMove"
+                                                                MouseLeftButtonUp="Sv_MouseUp">
+                                                            <Border x:Name="SvThumb" Width="12" Height="12" CornerRadius="6"
+                                                                    BorderBrush="White" BorderThickness="2"
+                                                                    IsHitTestVisible="False" />
+                                                        </Canvas>
+                                                    </Grid>
+                                                </Border>
+
+                                                <Border Width="200" Height="14" Margin="0,12,0,0" CornerRadius="7" ClipToBounds="True"
+                                                        BorderBrush="{DynamicResource ControlStrokeSecondary}" BorderThickness="1">
+                                                    <Grid>
+                                                        <Rectangle>
+                                                            <Rectangle.Fill>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                                    <GradientStop Offset="0.000" Color="#FF0000" />
+                                                                    <GradientStop Offset="0.166" Color="#FFFF00" />
+                                                                    <GradientStop Offset="0.333" Color="#00FF00" />
+                                                                    <GradientStop Offset="0.500" Color="#00FFFF" />
+                                                                    <GradientStop Offset="0.666" Color="#0000FF" />
+                                                                    <GradientStop Offset="0.833" Color="#FF00FF" />
+                                                                    <GradientStop Offset="1.000" Color="#FF0000" />
+                                                                </LinearGradientBrush>
+                                                            </Rectangle.Fill>
+                                                        </Rectangle>
+                                                        <Canvas x:Name="HueCanvas" Background="Transparent"
+                                                                MouseLeftButtonDown="Hue_MouseDown"
+                                                                MouseMove="Hue_MouseMove"
+                                                                MouseLeftButtonUp="Hue_MouseUp">
+                                                            <Border x:Name="HueThumb" Width="6" Height="14" CornerRadius="2"
+                                                                    BorderBrush="White" BorderThickness="2" Background="#40000000"
+                                                                    IsHitTestVisible="False" />
+                                                        </Canvas>
+                                                    </Grid>
+                                                </Border>
+
+                                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0" VerticalAlignment="Center">
+                                                    <Border x:Name="PickerPreview" Width="26" Height="26" CornerRadius="4"
+                                                            BorderBrush="{DynamicResource ControlStrokeSecondary}" BorderThickness="1"
+                                                            Margin="0,0,8,0" />
+                                                    <TextBox x:Name="PickerHexBox"
+                                                             Style="{StaticResource FluentTextBox}"
+                                                             Width="92"
+                                                             FontFamily="Cascadia Mono, Consolas"
+                                                             VerticalAlignment="Center"
+                                                             TextChanged="PickerHex_Changed" />
+                                                    <Button Content="Done"
+                                                            Style="{StaticResource FluentButton}"
+                                                            Margin="8,0,0,0"
+                                                            Click="ColorPickerDone_Click" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                    </Popup>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Live client inspector" Margin="0,16,0,0" />
+
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   Margin="0,0,0,4"
+                                   TextWrapping="Wrap"
+                                   Text="Reads the running client&apos;s live instance tree - the real services and GUI, not what the log implies. Read only." />
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource CardHeader}" Text="Read the client now" />
+                                    <TextBlock x:Name="InspectorText2" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="Roblox has to be running." />
+                                </StackPanel>
+                                <Button x:Name="InspectButton"
+                                        Grid.Column="1"
+                                        Style="{StaticResource AccentButton}"
+                                        Content="Read"
+                                        Margin="16,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Click="Inspect_Click" />
+                            </Grid>
+                        </Border>
+
+                        <Border x:Name="InspectorResult" Style="{StaticResource Card}" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock x:Name="InspectorServices"
+                                           Style="{StaticResource CardDescription}"
+                                           FontFamily="Cascadia Mono, Consolas"
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"
+                                           Text="" />
+                                <ItemsControl x:Name="InspectorFrames" />
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Override offsets" Margin="0,16,0,0" />
+
+                        <TextBlock Style="{StaticResource PageDescription}"
+                                   Margin="0,0,0,4"
+                                   TextWrapping="Wrap"
+                                   Text="Jello fetches the offset tables for your build from the published sources. If you have your own - for a build no source has caught up with, or a set you trust more - paste them here and they are used instead. Turn the Lab off and this same panel moves to its own Offsets tab." />
+
+                        <ContentControl x:Name="OverrideHostLab" />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem x:Name="OffsetsTab" Style="{StaticResource NavItem}" Header="Offsets" Tag="{StaticResource IconDocument}" Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Offsets" />
+                    <TextBlock Style="{StaticResource PageDescription}"
+                               TextWrapping="Wrap"
+                               Text="Jello fetches the offset tables it needs for your Roblox build from the published sources. Paste your own here to use them in place of a fetch - for a build no source has caught up with, or a set you trust more. This tab appears while the Lab is off; turn the Lab on and this same panel moves there." />
+
+                    <ContentControl x:Name="OverrideHostTab" Margin="0,4,0,0">
+                        <StackPanel x:Name="OverridePanel">
+                            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Style="{StaticResource CardHeader}" Text="Use my own offsets" />
+                                        <TextBlock x:Name="OverrideText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="OverrideToggle"
+                                              Grid.Column="1"
+                                              Style="{StaticResource ToggleSwitch}"
+                                              Margin="16,0,0,0"
+                                              VerticalAlignment="Center"
+                                              Click="Override_Click" />
+                                </Grid>
+                            </Border>
+
+                            <StackPanel x:Name="OverrideBoxes" Visibility="Collapsed">
+                                <Border Style="{StaticResource Card}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource CardHeader}" Text="Memory layout offsets" VerticalAlignment="Center" />
+                                            <Border Style="{StaticResource HelpBadge}"
+                                                    ToolTip="The grouped struct offsets the Lab walker reads to find instances in the running client - the &quot;.memory.json&quot; table. Shape: an object with a &quot;Roblox Version&quot; stamp and an &quot;Offsets&quot; object of groups. Only affects the Lab.">
+                                                <TextBlock Style="{StaticResource HelpBadgeMark}" />
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock x:Name="MemoryOffsetsStatus"
+                                                   Style="{StaticResource CardDescription}"
+                                                   TextWrapping="Wrap"
+                                                   Text="" />
+                                        <TextBox x:Name="MemoryOffsetsBox"
+                                                 Style="{StaticResource FluentTextBox}"
+                                                 Margin="0,10,0,0"
+                                                 Height="120"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="NoWrap"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 HorizontalScrollBarVisibility="Auto"
+                                                 VerticalContentAlignment="Top"
+                                                 FontFamily="Cascadia Mono, Consolas"
+                                                 FontSize="12"
+                                                 TextChanged="MemoryOffsets_Changed" />
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource Card}">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource CardHeader}" Text="FastFlag offsets" VerticalAlignment="Center" />
+                                            <Border Style="{StaticResource HelpBadge}"
+                                                    ToolTip="The flat name-to-address map live flag injection writes through - one address per FastFlag in this build. Shape: an object with a &quot;BuildVersion&quot; stamp and an &quot;Offsets&quot; object of name to number. Used by live flags on the FastFlags page.">
+                                                <TextBlock Style="{StaticResource HelpBadgeMark}" />
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock x:Name="FlagOffsetsStatus"
+                                                   Style="{StaticResource CardDescription}"
+                                                   TextWrapping="Wrap"
+                                                   Text="" />
+                                        <TextBox x:Name="FlagOffsetsBox"
+                                                 Style="{StaticResource FluentTextBox}"
+                                                 Margin="0,10,0,0"
+                                                 Height="120"
+                                                 AcceptsReturn="True"
+                                                 AcceptsTab="True"
+                                                 TextWrapping="NoWrap"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 HorizontalScrollBarVisibility="Auto"
+                                                 VerticalContentAlignment="Top"
+                                                 FontFamily="Cascadia Mono, Consolas"
+                                                 FontSize="12"
+                                                 TextChanged="FlagOffsets_Changed" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </ContentControl>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItem}" Header="Privacy" Tag="{StaticResource IconShield}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Privacy" />
+                    <TextBlock Style="{StaticResource PageDescription}" Text="What leaves this machine, and who can see Jello while it is open." />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Telemetry" Margin="0,16,0,0" />
+
+                    <TextBlock Style="{StaticResource PageDescription}"
+                               Margin="0,0,0,4"
+                               TextWrapping="Wrap"
+                               Text="Roblox sends counters, traces and crash reports to a handful of its own hosts. This points those names at nowhere, in the Windows hosts file. Two things follow from that: it needs administrator rights, so Windows will ask; and it applies to every program on this computer, not only to Roblox. Roblox itself keeps working - none of these carry anything a game needs." />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Block Roblox telemetry" />
+                                <TextBlock x:Name="TelemetryText" Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                                <Button x:Name="TelemetryHostsButton"
+                                        Style="{StaticResource FluentButton}"
+                                        Content="Show hosts"
+                                        Margin="0,0,8,0"
+                                        Click="ShowTelemetryHosts_Click" />
+                                <CheckBox x:Name="TelemetryToggle"
+                                          Style="{StaticResource ToggleSwitch}"
+                                          VerticalAlignment="Center"
+                                          Click="Telemetry_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="On screen" Margin="0,16,0,0" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Secure UI" />
+                                <TextBlock Style="{StaticResource CardDescription}" TextWrapping="Wrap" Text="Hides Jello's windows from screenshots, screen recording and screen sharing. They stay visible on your own display." />
+                            </StackPanel>
+                            <CheckBox x:Name="SecureToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Checked="SecureToggle_Changed"
+                                      Unchecked="SecureToggle_Changed" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItem}" Header="Settings" Tag="{StaticResource IconWindow}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="Settings" />
+                    <TextBlock Style="{StaticResource PageDescription}" Text="How Jello's own windows are drawn, where they sit, and how they behave when the screen is captured. These apply to the launcher, this window and the server panel alike." />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Appearance" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Acrylic blur" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Translucent background that samples the desktop behind the window. Turning this off falls back to a solid background." />
+                            </StackPanel>
+                            <CheckBox x:Name="AcrylicToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="AcrylicToggle_Changed"
+                                      Unchecked="AcrylicToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Placement" />
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Always on top" />
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Keeps Jello above other windows, including full-screen borderless games." />
+                            </StackPanel>
+                            <CheckBox x:Name="TopmostToggle"
+                                      Grid.Column="1"
+                                      Style="{StaticResource ToggleSwitch}"
+                                      Checked="TopmostToggle_Changed"
+                                      Unchecked="TopmostToggle_Changed" />
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Privacy" />
+
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Style="{StaticResource NavItemBottom}" Header="About" Tag="{StaticResource IconInfo}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource PageTitle}" Text="About" />
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0" Padding="20">
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Style="{StaticResource LogoMark}"
+                                       Width="144"
+                                       Height="144"
+                                       VerticalAlignment="Center" />
+                            <StackPanel Margin="24,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="Jello Client"
+                                           FontFamily="{StaticResource PoppinsFont}"
+                                           FontWeight="Bold"
+                                           FontSize="30"
+                                           Foreground="{DynamicResource TextPrimary}" />
+                                <TextBlock x:Name="AppVersionText"
+                                           FontFamily="{StaticResource PoppinsFont}"
+                                           FontSize="14"
+                                           Foreground="{DynamicResource TextSecondary}"
+                                           Margin="0,2,0,0" />
+                                <TextBlock Style="{StaticResource CardDescription}"
+                                           Text="A Roblox bootstrapper for FastFlags, modifications and optimizations."
+                                           Margin="0,8,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Updates" />
+                                <TextBlock x:Name="AppUpdateStatusText"
+                                           Style="{StaticResource CardDescription}"
+                                           Text="Jello updates itself from its GitHub releases." />
+                            </StackPanel>
+                            <Button x:Name="AppUpdateButton"
+                                    Grid.Column="1"
+                                    Style="{StaticResource FluentButton}"
+                                    Content="Check for updates"
+                                    Margin="16,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Click="AppUpdate_Click" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardHeader}" Text="Install location" />
+                            <TextBlock x:Name="BasePathText" Style="{StaticResource CardDescription}" Text="" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource CardHeader}" Text="Session log" />
+                                <TextBlock x:Name="LogPathText" Style="{StaticResource CardDescription}" Text="" />
+                            </StackPanel>
+                            <Button Grid.Column="1"
+                                    Style="{StaticResource FluentButton}"
+                                    Content="Open logs"
+                                    Margin="16,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Click="OpenLogs_Click" />
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardHeader}" Text="Links" />
+                            <TextBlock Style="{StaticResource CardDescription}" Text="The project, the channel, and the Discord." />
+                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                <Button Style="{StaticResource LinkIconButton}"
+                                        Content="{StaticResource IconGitHub}"
+                                        ToolTip="GitHub"
+                                        Tag="https://github.com/aebkjayboo/JelloClient"
+                                        Margin="0,0,10,0"
+                                        Click="OpenLink_Click" />
+                                <Button Style="{StaticResource LinkIconButton}"
+                                        Content="{StaticResource IconYouTube}"
+                                        ToolTip="YouTube"
+                                        Tag="https://www.youtube.com/@its-skondo"
+                                        Margin="0,0,10,0"
+                                        Click="OpenLink_Click" />
+                                <Button Style="{StaticResource LinkIconButton}"
+                                        Content="{StaticResource IconDiscordBrand}"
+                                        ToolTip="Discord"
+                                        Tag="https://discord.gg/tpnP9NNBap"
+                                        Click="OpenLink_Click" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardHeader}" Text="Credits" />
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                <TextBlock Style="{StaticResource CardDescription}" Text="Made by " VerticalAlignment="Center" />
+                                <TextBlock Style="{StaticResource AccentLink}"
+                                           Text="Sai"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"
+                                           ToolTip="https://www.youtube.com/@its-skondo"
+                                           Tag="https://www.youtube.com/@its-skondo"
+                                           MouseLeftButtonUp="OpenLink_Click" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Licenses" />
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardDescription}"
+                                       Text="Jello is MIT licensed. These are the projects whose code or assets it actually uses." />
+                            <WrapPanel Margin="0,12,0,0">
+                                <Button Style="{StaticResource FluentButton}" Content="Jello Client (MIT)" Margin="0,0,8,8"
+                                        Tag="https://github.com/aebkjayboo/JelloClient/blob/main/LICENSE" Click="OpenLink_Click" />
+                                <Button Style="{StaticResource FluentButton}" Content="Bloxstrap (MIT)" Margin="0,0,8,8"
+                                        Tag="https://github.com/bloxstraplabs/bloxstrap/blob/main/LICENSE" Click="OpenLink_Click" />
+                                <Button Style="{StaticResource FluentButton}" Content="Poppins (OFL 1.1)" Margin="0,0,8,8"
+                                        Tag="https://github.com/google/fonts/blob/main/ofl/poppins/OFL.txt" Click="OpenLink_Click" />
+                                <Button Style="{StaticResource FluentButton}" Content="Lucide (ISC)" Margin="0,0,8,8"
+                                        Tag="https://github.com/lucide-icons/lucide/blob/main/LICENSE" Click="OpenLink_Click" />
+                                <Button Style="{StaticResource FluentButton}" Content="WebView2 (BSD-3)" Margin="0,0,8,8"
+                                        Tag="https://www.nuget.org/packages/Microsoft.Web.WebView2/license" Click="OpenLink_Click" />
+                                <Button Style="{StaticResource FluentButton}" Content="Roblox assets" Margin="0,0,8,8"
+                                        Tag="https://en.help.roblox.com/hc/en-us/articles/115004647846" Click="OpenLink_Click" />
+                            </WrapPanel>
+                            <TextBlock Style="{StaticResource CardDescription}"
+                                       Margin="0,8,0,0"
+                                       Foreground="{DynamicResource TextTertiary}"
+                                       TextWrapping="Wrap"
+                                       Text="Bloxstrap covers the mod preset mechanism and the bundled preset files. The cursor, sound and avatar-background binaries inside those presets are Roblox Corporation's, not Bloxstrap's. Full text ships in THIRD-PARTY-NOTICES.md." />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </TabItem>
+
+        </TabControl>
+
+        <Border Grid.Row="3"
+                BorderBrush="{DynamicResource ControlStroke}"
+                BorderThickness="0,1,0,0"
+                Padding="24,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="StatusText"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
+                           FontSize="12"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource TextTertiary}" />
+                <Button Grid.Column="1"
+                        Style="{StaticResource FluentButton}"
+                        Content="Close"
+                        Margin="12,0,0,0"
+                        Click="CloseButton_Click" />
+            </Grid>
+        </Border>
+    </Grid>
+</ui:JelloWindow>

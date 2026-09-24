@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>JelloClient</AssemblyName>
+    <RootNamespace>JelloClient</RootNamespace>
+    <Product>Jello Client</Product>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RollForward>Major</RollForward>
+    <Version>2.0.0</Version>
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Remove="System.Drawing" />
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\logo.png" />
+    <Resource Include="Assets\icon.ico" />
+    <Resource Include="Assets\Fonts\Poppins-Regular.ttf" />
+    <Resource Include="Assets\Fonts\Poppins-Medium.ttf" />
+    <Resource Include="Assets\Fonts\Poppins-SemiBold.ttf" />
+    <Resource Include="Assets\Fonts\Poppins-Bold.ttf" />
+    <EmbeddedResource Include="Assets\Mods\Cursor\From2006\ArrowCursor.png" />
+    <EmbeddedResource Include="Assets\Mods\Cursor\From2006\ArrowFarCursor.png" />
+    <EmbeddedResource Include="Assets\Mods\Cursor\From2013\ArrowCursor.png" />
+    <EmbeddedResource Include="Assets\Mods\Cursor\From2013\ArrowFarCursor.png" />
+    <EmbeddedResource Include="Assets\Mods\Sounds\Empty.mp3" />
+    <EmbeddedResource Include="Assets\Mods\Sounds\OldGetUp.mp3" />
+    <EmbeddedResource Include="Assets\Mods\Sounds\OldJump.mp3" />
+    <EmbeddedResource Include="Assets\Mods\Sounds\OldWalk.mp3" />
+    <EmbeddedResource Include="Assets\Mods\OldAvatarBackground.rbxl" />
+    <EmbeddedResource Include="server.txt" />
+    <None Include="Assets\Fonts\OFL.txt" />
+    <None Include="THIRD-PARTY-NOTICES.md" />
+    <None Include="LICENSE" />
+    <None Include="PRIVACY.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4191.47" />
+  </ItemGroup>
+
+</Project>

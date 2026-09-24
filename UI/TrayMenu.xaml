@@ -1,0 +1,90 @@
+<Window x:Class="JelloClient.UI.TrayMenu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="JelloTrayMenu"
+        Width="0"
+        Height="0"
+        Left="-32000"
+        Top="-32000"
+        ShowInTaskbar="False"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="Manual"
+        Loaded="Window_Loaded">
+
+    <Window.ContextMenu>
+        <ContextMenu x:Name="Menu" Style="{StaticResource TrayMenu}" Opened="Menu_Opened">
+            <MenuItem x:Name="HeaderItem"
+                      Style="{StaticResource TrayMenuHeader}"
+                      Tag="{StaticResource IconInfo}"
+                      Click="Header_Click" />
+
+            <Separator Style="{StaticResource TrayMenuSeparator}" />
+
+            <MenuItem x:Name="ServerInfoItem"
+                      Style="{StaticResource TrayMenuItem}"
+                      Header="Server information"
+                      Tag="{StaticResource IconGlobe}"
+                      Click="ServerInfo_Click" />
+
+            <MenuItem x:Name="CopyInviteItem"
+                      Style="{StaticResource TrayMenuItem}"
+                      Header="Copy join link"
+                      Tag="{StaticResource IconLink}"
+                      Click="CopyInvite_Click" />
+
+            <MenuItem x:Name="CopyDetailsItem"
+                      Style="{StaticResource TrayMenuItem}"
+                      Header="Copy server details"
+                      Tag="{StaticResource IconCopy}"
+                      Click="CopyDetails_Click" />
+
+            <MenuItem x:Name="RichPresenceItem"
+                      Style="{StaticResource TrayMenuItem}"
+                      Header="Discord Rich Presence"
+                      Tag="{StaticResource IconDiscord}"
+                      IsCheckable="True"
+                      Click="RichPresence_Click" />
+
+            <MenuItem x:Name="OpenLogItem"
+                      Style="{StaticResource TrayMenuItem}"
+                      Header="Open Roblox log"
+                      Tag="{StaticResource IconDocument}"
+                      Click="OpenLog_Click" />
+
+            <MenuItem x:Name="CloseRobloxItem"
+                      Style="{StaticResource TrayMenuItem}"
+                      Header="Close Roblox"
+                      Tag="{StaticResource IconPower}"
+                      Click="CloseRoblox_Click" />
+
+            <Separator x:Name="ActivitySeparator" Style="{StaticResource TrayMenuSeparator}" />
+
+            <MenuItem Style="{StaticResource TrayMenuItem}"
+                      Header="Launch Roblox"
+                      Tag="{StaticResource IconPlay}"
+                      Click="Launch_Click" />
+
+            <MenuItem Style="{StaticResource TrayMenuItem}"
+                      Header="Settings"
+                      Tag="{StaticResource IconSettings}"
+                      Click="Settings_Click" />
+
+            <Separator Style="{StaticResource TrayMenuSeparator}" />
+
+            <MenuItem Style="{StaticResource TrayMenuItem}"
+                      Header="Close (keep running in background)"
+                      Tag="{StaticResource IconExit}"
+                      Click="Exit_Click" />
+
+            <MenuItem Style="{StaticResource TrayMenuItem}"
+                      Header="Quit completely"
+                      Tag="{StaticResource IconPower}"
+                      Click="QuitCompletely_Click" />
+        </ContextMenu>
+    </Window.ContextMenu>
+
+    <Grid />
+</Window>

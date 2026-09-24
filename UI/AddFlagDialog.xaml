@@ -1,0 +1,173 @@
+<ui:JelloWindow x:Class="JelloClient.UI.AddFlagDialog"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+                xmlns:ui="clr-namespace:JelloClient.UI"
+                Title="Add a FastFlag"
+                Width="520"
+                SizeToContent="Height"
+                ResizeMode="NoResize"
+                ShowInTaskbar="False"
+                WindowStartupLocation="CenterOwner"
+                FontFamily="{StaticResource UiFont}"
+                Icon="/Assets/icon.ico">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="40"
+                            ResizeBorderThickness="0"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid x:Name="Root" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <TextBlock Text="Add a FastFlag"
+                       Margin="16,0,0,0"
+                       FontSize="12"
+                       Foreground="{DynamicResource TextSecondary}"
+                       VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,4,0"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                <Button Style="{StaticResource CloseButton}"
+                        Tag="{StaticResource IconClose}"
+                        ToolTip="Close"
+                        Click="Cancel_Click" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Margin="20,4,20,20">
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                <ToggleButton x:Name="SingleTabButton"
+                              Style="{StaticResource ChipToggle}"
+                              Content="Single"
+                              Margin="0,0,8,0"
+                              IsChecked="True"
+                              Click="Tab_Click" />
+                <ToggleButton x:Name="JsonTabButton"
+                              Style="{StaticResource ChipToggle}"
+                              Content="JSON"
+                              Margin="0,0,8,0"
+                              Click="Tab_Click" />
+                <ToggleButton x:Name="Base64TabButton"
+                              Style="{StaticResource ChipToggle}"
+                              Content="Base64"
+                              Click="Tab_Click" />
+            </StackPanel>
+
+            <Grid x:Name="SinglePanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Name"
+                           VerticalAlignment="Center"
+                           Margin="0,0,0,10"
+                           FontSize="13.5"
+                           Foreground="{DynamicResource TextSecondary}" />
+                <TextBox x:Name="FlagNameBox"
+                         Grid.Row="0"
+                         Grid.Column="1"
+                         Style="{StaticResource FluentTextBox}"
+                         Margin="0,0,0,10"
+                         FontFamily="Cascadia Mono, Consolas"
+                         TextChanged="Input_Changed" />
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Text="Value"
+                           VerticalAlignment="Center"
+                           FontSize="13.5"
+                           Foreground="{DynamicResource TextSecondary}" />
+                <TextBox x:Name="FlagValueBox"
+                         Grid.Row="1"
+                         Grid.Column="1"
+                         Style="{StaticResource FluentTextBox}"
+                         FontFamily="Cascadia Mono, Consolas"
+                         TextChanged="Input_Changed" />
+
+                <TextBlock x:Name="TypeHintText"
+                           Grid.Row="2"
+                           Grid.Column="1"
+                           Margin="0,8,0,0"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextTertiary}"
+                           Text="The prefix decides the type: FFlag, DFFlag and SFFlag take True or False, FInt and DFInt take a number, FString and DFString take text." />
+            </Grid>
+
+            <StackPanel x:Name="JsonPanel" Visibility="Collapsed">
+                <TextBox x:Name="JsonBox"
+                         Style="{StaticResource FluentTextBox}"
+                         Height="180"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         VerticalScrollBarVisibility="Auto"
+                         TextWrapping="NoWrap"
+                         FontFamily="Cascadia Mono, Consolas"
+                         VerticalContentAlignment="Top"
+                         TextChanged="Input_Changed" />
+                <Button Style="{StaticResource FluentButton}"
+                        Content="Import from file"
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Left"
+                        Click="ImportFile_Click" />
+            </StackPanel>
+
+            <StackPanel x:Name="Base64Panel" Visibility="Collapsed">
+                <TextBox x:Name="Base64Box"
+                         Style="{StaticResource FluentTextBox}"
+                         Height="180"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         TextWrapping="Wrap"
+                         FontFamily="Cascadia Mono, Consolas"
+                         VerticalContentAlignment="Top"
+                         TextChanged="Input_Changed" />
+                <TextBlock Margin="0,8,0,0"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextTertiary}"
+                           Text="Paste a base64 encoded flag object, the format shared in most flag posts." />
+            </StackPanel>
+
+            <StackPanel Margin="0,16,0,0">
+                <TextBlock x:Name="ValidationText"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,12"
+                           Visibility="Collapsed"
+                           Foreground="{DynamicResource WarningText}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource FluentButton}"
+                            Content="Cancel"
+                            IsCancel="True"
+                            Click="Cancel_Click" />
+                    <Button x:Name="AddButton"
+                            Style="{StaticResource AccentButton}"
+                            Content="Add"
+                            Margin="8,0,0,0"
+                            IsEnabled="False"
+                            Click="Add_Click" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</ui:JelloWindow>

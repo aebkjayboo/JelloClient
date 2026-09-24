@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+
+    <SolidColorBrush x:Key="ApplicationBackground" Color="#FFF3F3F3" />
+
+    <SolidColorBrush x:Key="TextPrimary" Color="#E4000000" />
+    <SolidColorBrush x:Key="TextSecondary" Color="#9E000000" />
+    <SolidColorBrush x:Key="TextTertiary" Color="#8A000000" />
+
+    <SolidColorBrush x:Key="ControlFill" Color="#B3FFFFFF" />
+    <SolidColorBrush x:Key="ControlFillSecondary" Color="#80F9F9F9" />
+    <SolidColorBrush x:Key="ControlFillTertiary" Color="#66EDEDED" />
+    <SolidColorBrush x:Key="SubtleFillSecondary" Color="#0F000000" />
+    <SolidColorBrush x:Key="SubtleFillTertiary" Color="#0A000000" />
+
+    <SolidColorBrush x:Key="ControlStroke" Color="#1A000000" />
+    <SolidColorBrush x:Key="ControlStrokeSecondary" Color="#29000000" />
+    <SolidColorBrush x:Key="ControlStrongStroke" Color="#72000000" />
+
+    <SolidColorBrush x:Key="CardBackground" Color="#CCFFFFFF" />
+    <SolidColorBrush x:Key="CardStroke" Color="#1A000000" />
+
+    <SolidColorBrush x:Key="ToggleFillOff" Color="#0F000000" />
+    <SolidColorBrush x:Key="TextOnAccent" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ScrollThumb" Color="#8A000000" />
+    <SolidColorBrush x:Key="CloseHover" Color="#FFC42B1C" />
+
+    <SolidColorBrush x:Key="Accent" Color="#FF0F6CBD" />
+    <SolidColorBrush x:Key="AccentText" Color="#FF0B5495" />
+    <SolidColorBrush x:Key="SelectionFill" Color="#330F6CBD" />
+    <SolidColorBrush x:Key="SupportBlue" Color="#FF2A35B0" />
+    <SolidColorBrush x:Key="SupportBlueHover" Color="#FF1B237F" />
+    <SolidColorBrush x:Key="EditorFill" Color="#FFFFFFFF" />
+
+    <SolidColorBrush x:Key="PopupBackground" Color="#FFFAFAFA" />
+    <SolidColorBrush x:Key="WarningText" Color="#FF8A5700" />
+    <SolidColorBrush x:Key="DangerFill" Color="#FFC42B1C" />
+    <SolidColorBrush x:Key="DangerFillHover" Color="#E6C42B1C" />
+    <SolidColorBrush x:Key="DangerFillPressed" Color="#B3C42B1C" />
+    <SolidColorBrush x:Key="PresetYes" Color="#FF107C10" />
+
+    <SolidColorBrush x:Key="CodeKey" Color="#FF0B5495" />
+    <SolidColorBrush x:Key="CodeString" Color="#FF1D6B2E" />
+    <SolidColorBrush x:Key="CodeNumber" Color="#FF8A4B00" />
+    <SolidColorBrush x:Key="CodeKeyword" Color="#FF6A2DA8" />
+    <SolidColorBrush x:Key="CodeError" Color="#FFB01818" />
+    <SolidColorBrush x:Key="CodeText" Color="#E4000000" />
+
+    <SolidColorBrush x:Key="LogoFill" Color="#FF1A1A1A" />
+
+    <Color x:Key="WindowTint">#FFF3F3F3</Color>
+    <system:Byte x:Key="WindowTintAlpha">235</system:Byte>
+
+    <FontFamily x:Key="PoppinsFont">pack://application:,,,/Assets/Fonts/#Poppins</FontFamily>
+    <FontFamily x:Key="UiFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+
+    <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
+    <Thickness x:Key="CardPadding">14,16,14,16</Thickness>
+    <Thickness x:Key="CardSpacing">0,8,0,0</Thickness>
+
+</ResourceDictionary>
