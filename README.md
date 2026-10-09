@@ -1,4 +1,6 @@
-![Jello Client Banner](assets/JelloClient-Banner.png)
+<p align="center">
+  <img src="assets/JelloClient-Banner.png" alt="Jello Client Banner" width="600">
+</p>
 
 # Jello Client v2
 
