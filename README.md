@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/JelloClient-Banner.png" alt="Jello Client Banner" width="600">
+  <img src="Assets/JelloClient-Banner.png" alt="Jello Client Banner" width="600">
 </p>
 
 # Jello Client v2
