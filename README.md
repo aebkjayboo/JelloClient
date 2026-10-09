@@ -2,8 +2,6 @@
   <img src="Assets/JelloClient-Banner.png" alt="Jello Client Banner" width="600">
 </p>
 
-# Jello Client v2
-
 A Roblox bootstrapper for FastFlags, modifications and optimizations —
 rewritten from the v1 Electron/Python build as a single WPF app.
 .NET 8, no NuGet dependencies, acrylic window with rounded corners on
